@@ -46,8 +46,10 @@ function doJoin() {
       $("#join-btn").disabled = false;
     },
     onClose() {
+      bConnLost = true;
       const st = $("#status");
       if (st) st.textContent = t("j_conn_lost");
+      if (bCfg) renderBoard();
     },
   });
 }
@@ -161,6 +163,7 @@ function revealAnswers(correct, gained) {
 /* ================= BOARD (топтық ойын) ================= */
 let bCfg = null;
 let bIdeas = [];
+let bConnLost = false;
 
 function onBoardMsg(d) {
   if (d.type === "cfg") {
@@ -185,6 +188,7 @@ function renderBoard() {
   const waiting = !bCfg.started;
   card.innerHTML = `
     <div class="board-topic" style="color:var(--ink);background:var(--brand-soft);border-radius:14px;padding:14px;text-align:center;font-weight:800">🎯 ${esc(bCfg.topic)}</div>
+    ${bConnLost ? `<div class="bconn-lost">${t("j_conn_lost")}</div>` : ""}
     <div class="bgroup-head"><span class="dot" style="background:${GROUP_COLORS[group - 1]}"></span>${t("j_group_head", esc(gname))}</div>
     ${waiting
       ? '<div class="board-wait">' + t("j_board_wait") + "</div>"
@@ -225,6 +229,12 @@ function addIdea() {
   if (!bCfg || !bCfg.started) return;
   const text = $("#btext").value.trim();
   if (!text) return;
+  if (!client || !client.open) {
+    bConnLost = true;
+    toast(t("j_conn_lost"));
+    renderBoard();
+    return;
+  }
   client.send({ type: "idea", text, branch: $("#bbranch").value });
   $("#btext").value = "";
   toast(t("j_idea_sent"));

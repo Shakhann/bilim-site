@@ -169,6 +169,9 @@ function rtJoin(code, h = {}) {
     get selfId() {
       return peer.id;
     },
+    get open() {
+      return !!(conn && conn.open);
+    },
     send(data) {
       try {
         conn && conn.send(data);
