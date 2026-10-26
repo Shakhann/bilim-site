@@ -56,14 +56,7 @@ const esc = (s) =>
   String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
 
 /* ---------- Mugalimder ---------- */
-const TEACHERS_BASE = [
-  { name: "Айгерім Сатыбаева", subject: "Қазақ тілі мен әдебиеті", exp: "Тәжірибесі 14 жыл", color: "#4f46e5" },
-  { name: "Ерлан Қасымов", subject: "Математика", exp: "Тәжірибесі 9 жыл", color: "#7c3aed" },
-  { name: "Гүлнәр Оспанова", subject: "Физика", exp: "Тәжірибесі 11 жыл", color: "#0ea5e9" },
-  { name: "Дәурен Исаев", subject: "Тарих", exp: "Тәжірибесі 17 жыл", color: "#f59e0b" },
-  { name: "Махаббат Нұрмағамбетова", subject: "Англис тілі", exp: "Тәжірибесі 7 жыл", color: "#10b981" },
-  { name: "Серік Төлеубек", subject: "Информатика", exp: "Тәжірибесі 6 жыл", color: "#ef4444" },
-];
+
 
 function sampleQuiz() {
   return {
@@ -103,34 +96,14 @@ function sampleBoard() {
 
 /* Birinshi ret — seed. Mugalimder localStorage-de jalpy saqtalady */
 function ensureSeed() {
-  if (!store.get("bilim.teachers")) {
-    const t = TEACHERS_BASE.map((x, i) => ({
-      ...x,
-      id: i,
-      certs: [],
-      achievements: [],
-      years: {},
-      schedule: [],
-    }));
-    /* Mysaly: 2026 jyly Aygerim S — 6B, 7V, 9A */
-    t[0].years = { 2026: ["6Б", "7В", "9А"] };
-    t[0].schedule = [
-      { day: 0, shift: "am", period: 1, cls: "6Б", room: "204" },
-      { day: 0, shift: "am", period: 2, cls: "7В", room: "204" },
-      { day: 0, shift: "am", period: 3, cls: "9А", room: "205" },
-      { day: 1, shift: "am", period: 1, cls: "9А", room: "205" },
-      { day: 1, shift: "pm", period: 1, cls: "6Б", room: "204" },
-      { day: 1, shift: "pm", period: 2, cls: "7В", room: "204" },
-      { day: 2, shift: "am", period: 2, cls: "6Б", room: "204" },
-      { day: 2, shift: "am", period: 3, cls: "7В", room: "204" },
-      { day: 2, shift: "pm", period: 1, cls: "9А", room: "205" },
-      { day: 3, shift: "am", period: 1, cls: "7В", room: "204" },
-      { day: 3, shift: "pm", period: 2, cls: "6Б", room: "204" },
-      { day: 4, shift: "am", period: 2, cls: "9А", room: "205" },
-      { day: 4, shift: "am", period: 3, cls: "7В", room: "204" },
-      { day: 4, shift: "pm", period: 1, cls: "6Б", room: "204" },
-    ];
-    store.set("bilim.teachers", t);
+  /* Demo-mugalimderdi ketirip tastau (email-sizder — seed).
+     Real registratsiya bolgen mugalimderde email bar. */
+  const existing = store.get("bilim.teachers", null);
+  if (Array.isArray(existing)) {
+    const real = existing.filter((t) => t.email);
+    const seed = existing.filter((t) => !t.email);
+    /* Real mugalim bolganda ғana seed-lerdi joiu (baryn joiyp qalmasın) */
+    if (seed.length && real.length) store.set("bilim.teachers", real);
   }
   if (!store.get("bilim.quizzes")) store.set("bilim.quizzes", [sampleQuiz()]);
   if (!store.get("bilim.boards")) store.set("bilim.boards", [sampleBoard()]);

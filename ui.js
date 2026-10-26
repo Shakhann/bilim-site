@@ -75,6 +75,21 @@ function openFileDataUrl(dataUrl) {
     .catch(() => toast(t("file_open_err")));
 }
 
+/* DataURL файлын жүктеп алу (скачать) */
+function downloadDataUrl(dataUrl, filename) {
+  try {
+    const a = document.createElement("a");
+    a.href = dataUrl;
+    a.download = filename || "file";
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    toast(t("file_downloaded"));
+  } catch {
+    toast(t("file_open_err"));
+  }
+}
+
 /* Файл кеңейтіміне сәйкес иконка */
 function fileIcon(name) {
   const e = (name || "").split(".").pop().toLowerCase();

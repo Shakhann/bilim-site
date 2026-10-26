@@ -59,16 +59,8 @@ function initials2(name) {
 
 /* ---------- Selekter ---------- */
 function renderSelects() {
-  $("#teacher-select").innerHTML = teachers
-    .map((tc) => `<option value="${tc.id}"${String(tc.id) === String(teacherId) ? " selected" : ""}>${esc(tc.name)}</option>`)
-    .join("");
   $("#year-select").innerHTML = YEARS.map((y) => `<option value="${y}"${y === year ? " selected" : ""}>${t("year_of", y)}</option>`).join("");
 
-  $("#teacher-select").addEventListener("change", (e) => {
-    teacherId = e.target.value;
-    location.search = `?teacher=${teacherId}&year=${year}`;
-    renderAll();
-  });
   $("#year-select").addEventListener("change", (e) => {
     year = parseInt(e.target.value);
     location.search = `?teacher=${teacherId}&year=${year}`;

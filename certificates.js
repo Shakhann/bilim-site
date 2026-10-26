@@ -52,11 +52,20 @@ function renderCerts() {
     <div class="cert-card">
       ${certMedia(c)}
       <div class="cert-name">${esc(c.name)}</div>
-      <button class="cert-del" data-i="${i}" title="Жою">✕</button>
+      <button class="cert-dl" data-i="${i}" title="${t("dl_title")}">⬇</button>
+      <button class="cert-del" data-i="${i}" title="${t("dl_title_delete")}">✕</button>
     </div>`
     )
     .join("");
   grid.onclick = (e) => {
+    const dl = e.target.closest(".cert-dl");
+    if (dl) {
+      const c = T().certs[+dl.dataset.i];
+      if (!c) return;
+      const fname = (c.kind || "image") === "image" ? (c.name || "certificate") + ".jpg" : (c.fname || c.name + ".bin");
+      downloadDataUrl(c.data, fname);
+      return;
+    }
     const btn = e.target.closest(".cert-del");
     if (btn) {
       T().certs.splice(+btn.dataset.i, 1);

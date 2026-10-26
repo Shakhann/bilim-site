@@ -53,11 +53,18 @@ function renderAch() {
               : `<span class="ach-file" title="${t("click_to_open")}">${fileIcon(item.att.fname)} <span class="fname">${esc(item.att.fname || "Файл")}</span></span>`;
           }
           const textPart = item.text ? `<span>🏆 ${esc(item.text)}</span>` : "";
-          return `<div class="ach-item${item.att ? (item.att.kind === "image" ? " has-img" : " has-file") : ""}">${media}${textPart}<button class="ach-del" data-i="${i}">✕</button></div>`;
+          const dlBtn = item.att ? `<button class="ach-dl" data-i="${i}" title="${t("dl_title")}">⬇</button>` : "";
+          return `<div class="ach-item${item.att ? (item.att.kind === "image" ? " has-img" : " has-file") : ""}">${media}${textPart}${dlBtn}<button class="ach-del" data-i="${i}">✕</button></div>`;
         })
         .join("")
     : '<p class="certs-empty">' + t("ach_empty") + "</p>";
   list.onclick = (e) => {
+    const dl = e.target.closest(".ach-dl");
+    if (dl) {
+      const it = normAch(T().achievements[+dl.dataset.i]);
+      if (it && it.att) downloadDataUrl(it.att.data, it.att.fname || (it.att.kind === "image" ? "achievement.jpg" : "achievement.bin"));
+      return;
+    }
     const btn = e.target.closest(".ach-del");
     if (btn) {
       T().achievements.splice(+btn.dataset.i, 1);
