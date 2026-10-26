@@ -28,7 +28,7 @@ function videoEmbed(url) {
   if (y) return `<iframe class="vid" src="https://www.youtube.com/embed/${y[1]}" allow="autoplay; fullscreen" allowfullscreen></iframe>`;
   if (/\.(mp4|webm|ogg|mov|m4v)(\?|#|$)/i.test(url))
     return `<video class="vid" src="${esc(url)}" controls autoplay></video>`;
-  return `<div class="vid-fallback">⚠️ Бұл сілтеме видео ретінде танылмады:<br><a href="${esc(url)}" target="_blank">${esc(url)}</a></div>`;
+  return `<div class="vid-fallback">${t("video_not_recognized")}<br><a href="${esc(url)}" target="_blank">${esc(url)}</a></div>`;
 }
 
 /* Суретті кішірейтіп dataURL-ға айналдыру (localStorage үнемдеу үшін) */
@@ -72,7 +72,7 @@ function openFileDataUrl(dataUrl) {
       window.open(u, "_blank");
       setTimeout(() => URL.revokeObjectURL(u), 60000);
     })
-    .catch(() => toast("Файлды ашу мүмкін болмады"));
+    .catch(() => toast(t("file_open_err")));
 }
 
 /* Файл кеңейтіміне сәйкес иконка */
@@ -89,7 +89,7 @@ function fileIcon(name) {
 
 function rtHost(code, h = {}) {
   if (typeof Peer === "undefined") {
-    h.onError && h.onError("PeerJS жүктелмеді — интернет қажет");
+    h.onError && h.onError(t("peerjs_missing"));
     return { players: [], sendAll() {}, sendTo() {}, close() {} };
   }
   const peer = new Peer("bilim-rt-" + code);
@@ -135,7 +135,7 @@ function rtHost(code, h = {}) {
 
 function rtJoin(code, h = {}) {
   if (typeof Peer === "undefined") {
-    h.onError && h.onError("PeerJS жүктелмеді — интернет қажет");
+    h.onError && h.onError(t("peerjs_missing"));
     return { id: null, send() {}, close() {} };
   }
   const peer = new Peer();

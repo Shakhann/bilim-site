@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Кіру — Білім</title>
+  <title data-i18n="title_auth">Кіру — Білім</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -15,8 +15,8 @@
     <a class="auth-home" href="index.html" data-i18n="auth_home">← Басты бетке</a>
     <div class="auth-card">
       <div class="auth-logo">🎓</div>
-      <h1 id="auth-title" data-i18n="auth_title">Кіру</h1>
-      <p class="muted" id="auth-sub" data-i18n="auth_sub">Мұғалімдер мен оқушыларға арналған кеңістік</p>
+      <h1 id="auth-title">Кіру</h1>
+      <p class="muted" id="auth-sub">Мұғалімдер мен оқушыларға арналған кеңістік</p>
 
       <!-- Google -->
       <button class="btn google-btn" id="google-btn">
@@ -38,7 +38,7 @@
         <label><span data-i18n="li_pass">Пароль</span>
           <div class="pass-wrap">
             <input type="password" id="li-pass" required placeholder="••••••" />
-            <button type="button" class="pass-toggle" data-target="li-pass" aria-label="Парольді көрсету/жасыру" title="Көрсету / жасыру">👁️</button>
+            <button type="button" class="pass-toggle" data-target="li-pass" aria-label="Парольді көрсету/жасыру" data-i18n-title="pass_toggle" title="Көрсету / жасыру">👁️</button>
           </div>
         </label>
         <button type="submit" class="btn btn-primary btn-block" data-i18n="auth_title">Кіру</button>
@@ -59,12 +59,12 @@
 
       <!-- Тіркелу -->
       <form id="reg-form" style="display:none">
-        <label><span data-i18n="rg_name">Аты-жөніңіз</span><input type="text" id="rg-name" required placeholder="Аты-жөні" /></label>
+        <label><span data-i18n="rg_name">Аты-жөніңіз</span><input type="text" id="rg-name" required data-i18n-ph="rg_name_ph" placeholder="Аты-жөні" /></label>
         <label><span data-i18n="li_email">Эл-пошта</span><input type="email" id="rg-email" required placeholder="email@me.kz" /></label>
-        <label><span>Пароль (кемінде 6 таңба)</span>
+        <label><span data-i18n="rg_pass">Пароль (кемінде 6 таңба)</span>
           <div class="pass-wrap">
             <input type="password" id="rg-pass" required minlength="6" placeholder="••••••" />
-            <button type="button" class="pass-toggle" data-target="rg-pass" aria-label="Парольді көрсету/жасыру" title="Көрсету / жасыру">👁️</button>
+            <button type="button" class="pass-toggle" data-target="rg-pass" aria-label="Парольді көрсету/жасыру" data-i18n-title="pass_toggle" title="Көрсету / жасыру">👁️</button>
           </div>
         </label>
         <label><span data-i18n="rg_role">Сіз кімсіз?</span>
@@ -73,8 +73,8 @@
             <option value="student" data-i18n="rg_student">🎒 Оқушы</option>
           </select>
         </label>
-        <label id="rg-subject-l"><span data-i18n="rg_subject">Пәніңіз</span><input type="text" id="rg-subject" placeholder="Мыс: Математика" /></label>
-        <label id="rg-class-l" style="display:none"><span data-i18n="rg_class">Сыныбыңыз</span><input type="text" id="rg-class" placeholder="Мыс: 9А" maxlength="5" /></label>
+        <label id="rg-subject-l"><span data-i18n="rg_subject">Пәніңіз</span><input type="text" id="rg-subject" data-i18n-ph="rg_subject_ph" placeholder="Мыс: Математика" /></label>
+        <label id="rg-class-l" style="display:none"><span data-i18n="rg_class">Сыныбыңыз</span><input type="text" id="rg-class" data-i18n-ph="rg_class_ph" placeholder="Мыс: 9А" maxlength="5" /></label>
         <button type="submit" class="btn btn-primary btn-block" data-i18n="auth_title_reg">Тіркелу</button>
       </form>
 
@@ -118,7 +118,7 @@
       e.preventDefault();
       try {
         await resetPassword($("#rs-email").value);
-        msg("✅ Сілтеме жіберілді — почтаңызды (Spam папкам да) тексеріңіз");
+        msg(t("reset_sent"));
         showReset(false);
       } catch (err) {
         msg(err.message, false);
@@ -126,12 +126,12 @@
     });
 
     /* Табдар */
-    $$(".auth-tab").forEach((t) =>
-      t.addEventListener("click", () => {
-        $$(".auth-tab").forEach((x) => x.classList.toggle("active", x === t));
-        $("#login-form").style.display = t.dataset.tab === "login" ? "" : "none";
-        $("#reg-form").style.display = t.dataset.tab === "reg" ? "" : "none";
-        $("#auth-title").textContent = t.dataset.tab === "login" ? t("auth_title") : t("auth_title_reg");
+    $$(".auth-tab").forEach((tab) =>
+      tab.addEventListener("click", () => {
+        $$(".auth-tab").forEach((x) => x.classList.toggle("active", x === tab));
+        $("#login-form").style.display = tab.dataset.tab === "login" ? "" : "none";
+        $("#reg-form").style.display = tab.dataset.tab === "reg" ? "" : "none";
+        $("#auth-title").textContent = tab.dataset.tab === "login" ? t("auth_title") : t("auth_title_reg");
         $("#auth-msg").textContent = "";
       })
     );
@@ -148,7 +148,7 @@
       e.preventDefault();
       try {
         const u = await loginUser($("#li-email").value, $("#li-pass").value);
-        msg("✅ Сәлем, " + u.name + "!");
+        msg(t("hello", u.name));
         setTimeout(() => afterAuthRedirect(u), 600);
       } catch (err) {
         msg(err.message, false);
@@ -167,7 +167,7 @@
           subject: $("#rg-subject").value,
           className: $("#rg-class").value,
         });
-        msg("✅ Тіркелдіңіз, " + u.name + "!");
+        msg(t("registered", u.name));
         setTimeout(() => afterAuthRedirect(u), 600);
       } catch (err) {
         msg(err.message, false);
@@ -177,16 +177,16 @@
     /* Google */
     $("#google-btn").addEventListener("click", async () => {
       try {
-        msg("Google-мен байланысу...");
+        msg(t("google_connecting"));
         /* "Тіркелу" табы ашық болса — сол жердегі рөлі, әйтпесе сұрайды */
         const onReg = $("#reg-form").style.display !== "none";
         const u = await googleLogin(onReg ? $("#rg-role").value : null);
         if (u) {
-          msg("✅ Сәлем, " + u.name + "!");
+          msg(t("hello", u.name));
           setTimeout(() => afterAuthRedirect(u), 600);
         }
       } catch (err) {
-        msg("Google қате: " + (err.message || err), false);
+        msg(t("google_err") + " " + (err.message || err), false);
       }
     });
 
@@ -199,12 +199,12 @@
     /* Алдын ала кірген жағдай */
     const s = getSession();
     if (s) {
-      $("#auth-title").textContent = "Сәлем, " + s.name + "!";
+      $("#auth-title").textContent = t("hello", s.name);
       $("#auth-sub").textContent = s.role === "teacher" ? t("auth_as_teacher") : t("auth_as_student");
       $("#login-form").style.display = "none";
       $("#reg-form").style.display = "none";
       $("#google-btn").style.display = "none";
-      $$(".auth-tab").forEach((t) => (t.style.display = "none"));
+      $$(".auth-tab").forEach((tab) => (tab.style.display = "none"));
       const div = $(".auth-divider");
       if (div) div.style.display = "none";
       msg(t("auth_switch_note"));
@@ -213,7 +213,23 @@
         logout();
         location.replace("auth.html");
       });
+    } else {
+      $("#auth-title").textContent = t("auth_title");
+      $("#auth-sub").textContent = t("auth_sub");
     }
+
+    /* Тіл ауықса — таңба/қолдау мәтіндерін жаңарту */
+    window.addEventListener("langchange", () => {
+      const sess = getSession();
+      if (sess) {
+        $("#auth-title").textContent = t("hello", sess.name);
+        $("#auth-sub").textContent = sess.role === "teacher" ? t("auth_as_teacher") : t("auth_as_student");
+      } else {
+        const onReg = $("#reg-form").style.display !== "none";
+        $("#auth-title").textContent = onReg ? t("auth_title_reg") : t("auth_title");
+        $("#auth-sub").textContent = t("auth_sub");
+      }
+    });
   </script>
 </body>
 </html>

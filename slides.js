@@ -7,8 +7,8 @@
     document.body.insertAdjacentHTML(
       "afterbegin",
       `<div class="gate-overlay"><div class="gate-card"><h2>🔒 ${
-        s ? "Бұл бет тек мұғалімдерге арналған" : "Кіру қажет"
-      }</h2><p class="muted">Слайд конструкторы мен ойындар — мұғалімдерге ғана ашылады.</p><a class="btn btn-primary" href="auth.html">Кіру / Тіркелу</a><a class="btn btn-ghost" href="index.html">Басты бетке</a></div></div>`
+        s ? t("gate_teacher_only") : t("gate_login")
+      }</h2><p class="muted">${t("gate_slides")}</p><a class="btn btn-primary" href="auth.html">${t("btn_login_reg")}</a><a class="btn btn-ghost" href="index.html">${t("nav_home")}</a></div></div>`
     );
     throw new Error("auth gate: slides");
   }
@@ -78,8 +78,8 @@ function renderLessons() {
 $("#new-lesson").addEventListener("click", () => {
   const l = {
     id: uid(),
-    title: "Жаңа сабақ",
-    slides: [{ id: uid(), type: "text", title: "Сабақ тақырыбы", text: "Мазмұнын оң жақтан жазыңыз", bg: "#eef0ff" }],
+    title: t("lesson_new"),
+    slides: [{ id: uid(), type: "text", title: t("slide_title_default"), text: t("slide_text_default"), bg: "#eef0ff" }],
   };
   lessons.unshift(l);
   saveLessons();
@@ -117,9 +117,9 @@ function renderThumbs() {
       </div>
       <div class="num">${i + 1}</div>
       <div class="thumbs-actions">
-        <button data-mv="-1" data-i="${i}" title="Жоғары">↑</button>
-        <button data-mv="1" data-i="${i}" title="Төмен">↓</button>
-        <button data-del="${i}" title="Жою">🗑</button>
+        <button data-mv="-1" data-i="${i}" title="${t("move_up")}">↑</button>
+        <button data-mv="1" data-i="${i}" title="${t("move_down")}">↓</button>
+        <button data-del="${i}" title="${t("del_tooltip")}">🗑</button>
       </div>
     </div>`
       )
@@ -205,13 +205,13 @@ function renderProps() {
 
   if (s.type === "text") {
     html += `
-    <label><span>Тақырып</span><input type="text" id="p-title" value="${esc(s.title)}" /></label>
-    <label><span>Мәтін</span><textarea id="p-text" rows="6">${esc(s.text)}</textarea></label>`;
+    <label><span>${t("p_topic")}</span><input type="text" id="p-title" value="${esc(s.title)}" /></label>
+    <label><span>${t("p_text_label")}</span><textarea id="p-text" rows="6">${esc(s.text)}</textarea></label>`;
   }
   if (s.type === "video") {
     html += `
     <label><span>${t("p_video_url")}</span><input type="text" id="p-url" value="${esc(s.url || "")}" placeholder="https://youtube.com/watch?v=..." /></label>
-    <label><span>Атауы (бос қалдыруға болады)</span><input type="text" id="p-title" value="${esc(s.title || "")}" /></label>
+    <label><span>${t("p_name_optional")}</span><input type="text" id="p-title" value="${esc(s.title || "")}" /></label>
     <p class="muted" style="font-size:0.8rem;margin-top:10px">${t("p_video_url_note")}</p>`;
   }
   if (s.type === "quiz") {
@@ -230,11 +230,11 @@ function renderProps() {
         ${boards.map((b) => `<option value="${b.id}"${b.id === s.boardId ? " selected" : ""}>${esc(b.title)}</option>`).join("")}
       </select>
     </label>
-    <button class="mini-btn" id="p-edit-board" style="margin-top:12px">✏️ Жоспар құрастыру (ойындар беті)</button>`;
+    <button class="mini-btn" id="p-edit-board" style="margin-top:12px">${t("p_edit_board")}</button>`;
   }
 
   if (s.type !== "video" || true) {
-    html += `<label><span>Фон түсі</span><div class="bg-palette">
+    html += `<label><span>${t("p_bg_color")}</span><div class="bg-palette">
       ${SLIDE_BGS.map((b) => `<div class="bg-sw${(s.bg || "#eef0ff") === b ? " active" : ""}" data-bg="${b}" style="background:${b}"></div>`).join("")}
     </div></label>`;
   }
@@ -245,7 +245,7 @@ function renderProps() {
     if (s.type === "quiz" && !s.quizId && quizzes[0]) s.quizId = quizzes[0].id;
     if (s.type === "board" && !s.boardId && boards[0]) s.boardId = boards[0].id;
     if (s.type === "video" && !s.url) s.url = "";
-    if (s.type === "text" && !s.title) s.title = "Тақырып";
+    if (s.type === "text" && !s.title) s.title = t("p_topic");
     saveLessons();
     renderBuilder();
   });
@@ -258,7 +258,7 @@ function renderProps() {
   bind("#p-url", "url");
   $("#p-quiz")?.addEventListener("change", (e) => { s.quizId = e.target.value; saveLessons(); renderCanvas(); });
   $("#p-board")?.addEventListener("change", (e) => { s.boardId = e.target.value; saveLessons(); renderCanvas(); });
-  $("#p-edit-quiz")?.addEventListener("click", () => { showView("games"); toast("Ойындар бетін ашыңыз — тестті сол жерде құрастырыңыз"); });
+  $("#p-edit-quiz")?.addEventListener("click", () => { showView("games"); toast(t("quiz_edit_hint")); });
   $("#p-edit-board")?.addEventListener("click", () => showView("games"));
   $$(".bg-sw").forEach((sw) =>
     sw.addEventListener("click", () => {
@@ -279,9 +279,10 @@ $("#lesson-title").addEventListener("input", (e) => {
 
 function addSlide() {
   const l = lesson();
-  const type = prompt(t("st_prompt"), "мәтін");
-  const t = type.includes("видео") ? "video" : type.includes("тест") ? "quiz" : type.includes("топтық") ? "board" : "text";
-  const s = { id: uid(), type: t, title: "", text: "", bg: "#ffffff", url: "", quizId: quizzes[0]?.id, boardId: boards[0]?.id };
+  const type = prompt(t("st_prompt"), t("st_text"));
+  if (!type) return;
+  const st = type.includes("видео") ? "video" : type.includes("тест") ? "quiz" : type.includes("топтық") ? "board" : "text";
+  const s = { id: uid(), type: st, title: "", text: "", bg: "#ffffff", url: "", quizId: quizzes[0]?.id, boardId: boards[0]?.id };
   l.slides.splice(curSlide + 1, 0, s);
   curSlide += 1;
   saveLessons();
@@ -370,7 +371,7 @@ function renderGames() {
 
 /* --- Quiz editor --- */
 function blankQuestion() {
-  return { q: "Сұрақ мәтіні?", answers: ["", "", "", ""], correct: 0 };
+  return { q: t("q_ph"), answers: ["", "", "", ""], correct: 0 };
 }
 
 function openQuizEditor(id) {
@@ -479,7 +480,7 @@ function openBoardEditor(id) {
 
 /* Топ атауы: бос болса — «N-топ» */
 function gnameDefault(i) {
-  return i + 1 + "-топ";
+  return t("gname_default", i + 1);
 }
 
 function renderGNames(n, names) {
@@ -498,7 +499,7 @@ function groupNames() {
 }
 
 function updateBoardPreview() {
-  const topic = $("#bd-topic").value.trim() || "Тақырып";
+  const topic = $("#bd-topic").value.trim() || t("slide_title_default");
   const branches = $("#bd-branches").value.split(",").map((s) => s.trim()).filter(Boolean);
   const groups = Math.min(6, Math.max(2, +$("#bd-groups").value || 3));
   const names = groupNames();
@@ -548,7 +549,7 @@ $("#burger").addEventListener("click", () => {
 window.addEventListener("langchange", () => {
   const open = ["lessons", "builder", "games"].find((v) => $("#view-" + v).style.display !== "none");
   if (open === "lessons") renderLessons();
-  if (open === "games") renderGames();
+  if (open === "games") { renderGames(); updateBoardPreview(); }
   if (open === "builder" && lesson()) renderProps();
 });
 

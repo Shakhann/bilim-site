@@ -60,9 +60,9 @@ function initials2(name) {
 /* ---------- Selekter ---------- */
 function renderSelects() {
   $("#teacher-select").innerHTML = teachers
-    .map((t) => `<option value="${t.id}"${String(t.id) === String(teacherId) ? " selected" : ""}>${esc(t.name)}</option>`)
+    .map((tc) => `<option value="${tc.id}"${String(tc.id) === String(teacherId) ? " selected" : ""}>${esc(tc.name)}</option>`)
     .join("");
-  $("#year-select").innerHTML = YEARS.map((y) => `<option value="${y}"${y === year ? " selected" : ""}>${y} оқу жылы</option>`).join("");
+  $("#year-select").innerHTML = YEARS.map((y) => `<option value="${y}"${y === year ? " selected" : ""}>${t("year_of", y)}</option>`).join("");
 
   $("#teacher-select").addEventListener("change", (e) => {
     teacherId = e.target.value;
@@ -173,7 +173,7 @@ function renderAch() {
           if (item.att) {
             media = item.att.kind === "image"
               ? `<img class="ach-thumb" src="${item.att.data}" alt="" />`
-              : `<span class="ach-file" title="Ашу үшін басыңыз">${fileIcon(item.att.fname)} <span class="fname">${esc(item.att.fname || "Файл")}</span></span>`;
+              : `<span class="ach-file" title="${t("click_to_open")}">${fileIcon(item.att.fname)} <span class="fname">${esc(item.att.fname || "Файл")}</span></span>`;
           }
           const textPart = item.text ? `<span>🏆 ${esc(item.text)}</span>` : "";
           return `<div class="ach-item${item.att ? (item.att.kind === "image" ? " has-img" : " has-file") : ""}">${media}${textPart}<button class="ach-del" data-i="${i}">✕</button></div>`;
@@ -261,7 +261,7 @@ function renderSchedule() {
 
   ["am", "pm"].forEach((shift) => {
     const grid = $(`#grid-${shift}`);
-    let html = "<tr><th>" + t("sched_lesson") + "</th><th>" + t("sched_time") + "</th>" + DAYS.map((d) => `<th>${d}</th>`).join("") + "</tr>";
+    let html = "<tr><th>" + t("sched_lesson") + "</th><th>" + t("sched_time") + "</th>" + DAYS.map((d, i) => `<th>${tDay(i)}</th>`).join("") + "</tr>";
     PERIODS[shift].forEach((times, pi) => {
       const p = pi + 1;
       html += `<tr><td class="time">${p}</td><td class="time">${times[0]}–${times[1]}</td>`;
@@ -295,15 +295,15 @@ function onCellClick(e) {
     const removed = tc.schedule.splice(i, 1)[0];
     persist();
     renderSchedule();
-    toast(t("sched_removed", DAYS[day], removed.cls, removed.room));
+    toast(t("sched_removed", tDay(day), removed.cls, removed.room));
   }
 }
 
 /* Saabaq qosu */
 function renderAddForm() {
-  $("#sa-day").innerHTML = DAYS.map((d, i) => `<option value="${i}">${d}</option>`).join("");
+  $("#sa-day").innerHTML = DAYS.map((d, i) => `<option value="${i}">${tDay(i)}</option>`).join("");
   $("#sa-period").innerHTML = PERIODS.am
-    .map((times, i) => `<option value="${i + 1}">${i + 1} сабақ (${times[0]}–${times[1]})</option>`)
+    .map((times, i) => `<option value="${i + 1}">${t("period_label", i + 1, times[0] + "–" + times[1])}</option>`)
     .join("");
 
   /* Auysym auysqanda uaqyt jazbalary */
@@ -311,7 +311,7 @@ function renderAddForm() {
   const periodSel = $("#sa-period");
   const updatePeriods = () => {
     periodSel.innerHTML = PERIODS[shiftSel.value]
-      .map((times, i) => `<option value="${i + 1}">${i + 1} сабақ (${times[0]}–${times[1]})</option>`)
+      .map((times, i) => `<option value="${i + 1}">${t("period_label", i + 1, times[0] + "–" + times[1])}</option>`)
       .join("");
   };
   shiftSel.addEventListener("change", updatePeriods);
@@ -329,7 +329,7 @@ $("#sa-add").addEventListener("click", () => {
   tc.schedule.push({ day, shift, period, cls, room });
   persist();
   renderSchedule();
-  toast(t("sa_added", DAYS[day], period, cls, room));
+  toast(t("sa_added", tDay(day), period, cls, room));
 });
 
 /* ---------- Mобильdi meni ---- */

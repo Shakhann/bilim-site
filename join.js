@@ -181,7 +181,7 @@ function onBoardMsg(d) {
 
 function renderBoard() {
   const branches = bCfg.branches || [];
-  const gname = (bCfg.names && String(bCfg.names[group - 1] || "").trim()) || (group + "-топ");
+  const gname = (bCfg.names && String(bCfg.names[group - 1] || "").trim()) || t("gname_default", group);
   const waiting = !bCfg.started;
   card.innerHTML = `
     <div class="board-topic" style="color:var(--ink);background:var(--brand-soft);border-radius:14px;padding:14px;text-align:center;font-weight:800">🎯 ${esc(bCfg.topic)}</div>

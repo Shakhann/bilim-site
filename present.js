@@ -139,7 +139,7 @@ function startQuizHost(s, el) {
     },
     onMessage(d, conn) {
       if (d.type === "join") {
-        players.set(conn, { name: String(d.name || "Оқушы").slice(0, 18), answers: [], total: 0 });
+        players.set(conn, { name: String(d.name || t("student_default")).slice(0, 18), answers: [], total: 0 });
         updatePlayers();
       }
       if (d.type === "answer" && phase === "asking") {
@@ -296,7 +296,7 @@ function startBoardHost(s, el) {
   }
 
   const code = roomCode();
-  const gname = (g) => (board.names && String(board.names[g - 1] || "").trim()) || (g + "-топ");
+  const gname = (g) => (board.names && String(board.names[g - 1] || "").trim()) || t("gname_default", g);
   el.innerHTML = `
     <div class="board-host">
       <div class="board-topic-row">
@@ -336,7 +336,7 @@ function startBoardHost(s, el) {
     },
     onMessage(d, conn) {
       if (d.type === "join") {
-        conn.player = { name: String(d.name || "Оқушы").slice(0, 18), g: Math.min(board.groups, Math.max(1, +d.g || 1)) };
+        conn.player = { name: String(d.name || t("student_default")).slice(0, 18), g: Math.min(board.groups, Math.max(1, +d.g || 1)) };
         host.sendTo(conn, {
           type: "cfg",
           topic: board.topic,

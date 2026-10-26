@@ -71,17 +71,17 @@ async function ensureProfile(email, name, provider, prefRole) {
     user = { id: uid(), name, email, provider: provider || "local", role, createdAt: Date.now() };
     if (role === "teacher") {
       const teachers = getTeachers();
-      const t = {
+      const tc = {
         id: Math.max(0, ...teachers.map((x) => x.id)) + 1,
         name,
-        subject: "Жаңа мұғалім",
-        exp: "Тәжірибесі —",
+        subject: t("new_teacher_subject"),
+        exp: t("new_teacher_exp"),
         color: ["#4f46e5", "#7c3aed", "#0ea5e9", "#f59e0b", "#10b981", "#ef4444"][teachers.length % 6],
         certs: [], achievements: [], years: {}, schedule: [], email,
       };
-      teachers.push(t);
+      teachers.push(tc);
       saveTeachers(teachers);
-      user.teacherId = t.id;
+      user.teacherId = tc.id;
     }
     users[email] = user;
     store.set(USERS_KEY, users);
@@ -130,20 +130,20 @@ async function registerUser({ name, email, pw, role, subject, className }) {
     user.subject = (subject || "").trim();
     const teachers = getTeachers();
     if (!user.teacherId || !teachers.find((x) => x.id === user.teacherId)) {
-      const t = {
+      const tc = {
         id: Math.max(0, ...teachers.map((x) => x.id)) + 1,
         name: user.name,
-        subject: user.subject || "Жаңа мұғалім",
-        exp: "Тәжірибесі —",
+        subject: user.subject || t("new_teacher_subject"),
+        exp: t("new_teacher_exp"),
         color: ["#4f46e5", "#7c3aed", "#0ea5e9", "#f59e0b", "#10b981", "#ef4444"][teachers.length % 6],
         certs: [], achievements: [], years: {}, schedule: [], email,
       };
-      teachers.push(t);
+      teachers.push(tc);
       saveTeachers(teachers);
-      user.teacherId = t.id;
+      user.teacherId = tc.id;
     } else {
-      const t = teachers.find((x) => x.id === user.teacherId);
-      if (user.subject) { t.subject = user.subject; saveTeachers(teachers); }
+      const tc = teachers.find((x) => x.id === user.teacherId);
+      if (user.subject) { tc.subject = user.subject; saveTeachers(teachers); }
     }
   } else {
     user.className = (className || "").trim().toUpperCase();

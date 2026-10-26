@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Сабақ слайдтары — Білім</title>
+  <title data-i18n="title_slides">Сабақ слайдтары — Білім</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -78,7 +78,7 @@
           <div>
             <label class="props" style="border:0;padding:0;background:none">
               <span data-i18n="qz_name">Тест атауы</span>
-              <input type="text" id="qz-name" placeholder="Мыс: Алгебра, §12" />
+              <input type="text" id="qz-name" data-i18n-ph="qz_name_ph" placeholder="Мыс: Алгебра, §12" />
             </label>
             <label class="props" style="border:0;padding:0;background:none;margin-top:12px">
               <span data-i18n="qz_time">Сұраққа уақыт (секунд)</span>
@@ -104,9 +104,9 @@
         <p class="sub" data-i18n="bd_build">Жоспар құрастыру</p>
         <div class="qz-editor">
           <div>
-            <label class="props" style="border:0;padding:0;background:none"><span data-i18n="bd_name">Атауы</span><input type="text" id="bd-name" placeholder="Мыс: «Білімнің пайдасы»" /></label>
-            <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span data-i18n="bd_topic">Ортадағы тақырып</span><input type="text" id="bd-topic" placeholder="Тақырып мәтіні" /></label>
-            <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span data-i18n="bd_branches">Тарақтары (үтірмен)</span><input type="text" id="bd-branches" placeholder="Мыс: Денсаулық, Болашақ, Қоғам" /></label>
+            <label class="props" style="border:0;padding:0;background:none"><span data-i18n="bd_name">Атауы</span><input type="text" id="bd-name" data-i18n-ph="bd_name_ph" placeholder="Мыс: «Білімнің пайдасы»" /></label>
+            <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span data-i18n="bd_topic">Ортадағы тақырып</span><input type="text" id="bd-topic" data-i18n-ph="bd_topic_ph" placeholder="Тақырып мәтіні" /></label>
+            <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span data-i18n="bd_branches">Тарақтары (үтірмен)</span><input type="text" id="bd-branches" data-i18n-ph="bd_branches_ph" placeholder="Мыс: Денсаулық, Болашақ, Қоғам" /></label></label>
             <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span data-i18n="bd_groups">Топ саны</span><input type="number" id="bd-groups" min="2" max="6" value="3" /></label>
             <div id="bd-gnames" style="margin-top:12px;display:flex;flex-direction:column;gap:10px"></div>
             <div style="margin-top:18px;display:flex;gap:10px">
@@ -115,7 +115,7 @@
             </div>
           </div>
           <div id="board-preview" style="background:var(--bg);border-radius:12px;padding:18px">
-            <div class="board-topic" id="bp-topic" style="color:var(--ink);background:var(--brand-soft)">Тақырып</div>
+            <div class="board-topic" id="bp-topic" style="color:var(--ink);background:var(--brand-soft)" data-i18n="slide_title_default">Сабақ тақырыбы</div>
             <div id="bp-branches" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"></div>
             <div id="bp-groups" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"></div>
           </div>
@@ -128,7 +128,7 @@
   <footer class="footer">
     <div class="container footer-inner">
       <span>© <span id="year"></span> Білім мектебі</span>
-      <span class="muted">Дайындалу оңай, сабақ қызықты 🤝</span>
+      <span class="muted" data-i18n="footer_slides">Дайындалу оңай, сабақ қызықты 🤝</span>
     </div>
   </footer>
 
