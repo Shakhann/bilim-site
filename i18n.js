@@ -11,6 +11,7 @@ const I18N = {
     btn_login_reg: "Кіру / Тіркелу",
     btn_teacher_cab: "Мұғалім кабинеті",
     menu_cabinet: "Мұғалім кабинеті",
+    menu_sched: "Расписание",
     menu_switch: "Аккаунтты ауыстыру",
     menu_logout: "Түсу",
     /* Басты бет */
@@ -353,6 +354,7 @@ const I18N = {
     btn_login_reg: "Войти / Регистрация",
     btn_teacher_cab: "Кабинет учителя",
     menu_cabinet: "Кабинет учителя",
+    menu_sched: "Расписание",
     menu_switch: "Сменить аккаунт",
     menu_logout: "Выйти",
     hero_badge: "📚 Добро пожаловать в учебный 2026/27!",
@@ -689,6 +691,7 @@ const I18N = {
     btn_login_reg: "Sign in / Register",
     btn_teacher_cab: "Teacher cabinet",
     menu_cabinet: "Teacher cabinet",
+    menu_sched: "Timetable",
     menu_switch: "Switch account",
     menu_logout: "Log out",
     hero_badge: "📚 Welcome to the 2026/27 school year!",
