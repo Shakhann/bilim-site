@@ -588,8 +588,8 @@ body {
 .bidea-form input, .bidea-form select { flex: 1; padding: 10px 12px; border: 1px solid var(--line); border-radius: 10px; font-family: inherit; font-size: 0.9rem; }
 .bidea-form button { padding: 10px 18px; border: 0; border-radius: 10px; background: var(--brand); color: #fff; font-weight: 800; font-family: inherit; cursor: pointer; }
 
-/* ===== Tirkeluu / Kiruu (auth) ===== */
-.auth-wrap {
+/* ===== Tirkeluu / Kiruu (auth) — auth betindegi tolyq qobap (body > .auth-wrap) ===== */
+body > .auth-wrap {
   min-height: 100vh; display: flex; align-items: center; justify-content: center;
   background: radial-gradient(700px 400px at 80% 0%, rgba(124, 58, 237, 0.25), transparent),
     linear-gradient(160deg, #1e1b4b, #312e81 55%, #4f46e5); padding: 24px; position: relative;
