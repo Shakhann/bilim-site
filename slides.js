@@ -337,7 +337,11 @@ function renderGames() {
           (b) => `
     <div class="qz-card">
       <h3>👥 ${esc(b.title)}</h3>
-      <div class="qz-meta">Тақырып: «${esc(b.topic)}» · ${b.groups} топ</div>
+      <div class="qz-meta">Тақырып: «${esc(b.topic)}» · ${b.groups} топ${
+        b.names && b.names.some((n) => n && n.trim())
+          ? " · " + esc(b.names.map((n, i) => (n && n.trim()) || gnameDefault(i)).join(", "))
+          : ""
+      }</div>
       <div class="qz-meta">Тарақтары: ${esc(b.branches.join(", ") || "—")}</div>
       <div class="lesson-actions">
         <button class="mini-btn" data-act="edit" data-id="${b.id}">✏️ Ашу</button>
@@ -465,19 +469,47 @@ function openBoardEditor(id) {
   $("#bd-name").value = b ? b.title : "";
   $("#bd-topic").value = b ? b.topic : "";
   $("#bd-branches").value = b ? b.branches.join(", ") : "";
-  $("#bd-groups").value = b ? b.groups : 3;
+  const groups = Math.min(6, Math.max(2, +(b ? b.groups : 3) || 3));
+  $("#bd-groups").value = groups;
+  renderGNames(groups, b ? b.names : []);
   updateBoardPreview();
+}
+
+/* Топ атауы: бос болса — «N-топ» */
+function gnameDefault(i) {
+  return i + 1 + "-топ";
+}
+
+function renderGNames(n, names) {
+  names = names || [];
+  const box = $("#bd-gnames");
+  box.innerHTML = Array.from({ length: n }, (_, i) => `
+    <label class="props" style="border:0;padding:0;background:none">
+      <span><span class="gname-dot" style="background:${GROUP_COLORS[i]}"></span>Топ ${i + 1} атауы</span>
+      <input type="text" class="bd-gname" value="${esc(names[i] || "")}" placeholder="${gnameDefault(i)} (бос қалдырсаң — осы атау)" />
+    </label>`).join("");
+  box.querySelectorAll(".bd-gname").forEach((inp) => inp.addEventListener("input", updateBoardPreview));
+}
+
+function groupNames() {
+  return [...document.querySelectorAll("#bd-gnames .bd-gname")].map((inp) => inp.value.trim());
 }
 
 function updateBoardPreview() {
   const topic = $("#bd-topic").value.trim() || "Тақырып";
   const branches = $("#bd-branches").value.split(",").map((s) => s.trim()).filter(Boolean);
   const groups = Math.min(6, Math.max(2, +$("#bd-groups").value || 3));
+  const names = groupNames();
   $("#bp-topic").textContent = "🎯 " + topic;
   $("#bp-branches").innerHTML = branches.map((b) => `<span class="chip">${esc(b)}</span>`).join("");
-  $("#bp-groups").innerHTML = Array.from({ length: groups }, (_, i) => `<span class="chip" style="background:#fff;border:2px solid ${GROUP_COLORS[i]};color:${GROUP_COLORS[i]}">${i + 1}-топ (QR)</span>`).join("");
+  $("#bp-groups").innerHTML = Array.from({ length: groups }, (_, i) => `<span class="chip" style="background:#fff;border:2px solid ${GROUP_COLORS[i]};color:${GROUP_COLORS[i]}">${esc(names[i] || gnameDefault(i))} (QR)</span>`).join("");
 }
-["bd-topic", "bd-branches", "bd-groups"].forEach((id) => $("#bd-" + id.replace(/^bd-/, "")).addEventListener("input", updateBoardPreview));
+["bd-topic", "bd-branches"].forEach((id) => $("#bd-" + id.replace(/^bd-/, "")).addEventListener("input", updateBoardPreview));
+$("#bd-groups").addEventListener("input", () => {
+  const n = Math.min(6, Math.max(2, +$("#bd-groups").value || 3));
+  renderGNames(n, groupNames());
+  updateBoardPreview();
+});
 
 $("#bd-save").addEventListener("click", () => {
   const title = $("#bd-name").value.trim();
@@ -488,6 +520,7 @@ $("#bd-save").addEventListener("click", () => {
     topic,
     branches: $("#bd-branches").value.split(",").map((s) => s.trim()).filter(Boolean),
     groups: Math.min(6, Math.max(2, +$("#bd-groups").value || 3)),
+    names: groupNames(),
   };
   if (editingBoardId) Object.assign(boards.find((x) => x.id === editingBoardId), data);
   else boards.unshift({ id: uid(), ...data });

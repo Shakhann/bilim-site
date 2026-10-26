@@ -164,7 +164,7 @@ let bIdeas = [];
 
 function onBoardMsg(d) {
   if (d.type === "cfg") {
-    bCfg = { topic: d.topic, branches: d.branches, groups: d.groups };
+    bCfg = { topic: d.topic, branches: d.branches, groups: d.groups, names: d.names };
     bIdeas = d.ideas || [];
     renderBoard();
   }
@@ -176,9 +176,10 @@ function onBoardMsg(d) {
 
 function renderBoard() {
   const branches = bCfg.branches || [];
+  const gname = (bCfg.names && String(bCfg.names[group - 1] || "").trim()) || (group + "-топ");
   card.innerHTML = `
     <div class="board-topic" style="color:var(--ink);background:var(--brand-soft);border-radius:14px;padding:14px;text-align:center;font-weight:800">🎯 ${esc(bCfg.topic)}</div>
-    <div class="bgroup-head"><span class="dot" style="background:${GROUP_COLORS[group - 1]}"></span>${group}-топ · сенің топтағы ойларың</div>
+    <div class="bgroup-head"><span class="dot" style="background:${GROUP_COLORS[group - 1]}"></span>${esc(gname)} · сенің топтағы ойларың</div>
     <div class="bideas" id="bideas"></div>
     <div class="bidea-form">
       <select id="bbranch">

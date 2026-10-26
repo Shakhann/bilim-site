@@ -271,6 +271,7 @@ function startBoardHost(s, el) {
   }
 
   const code = roomCode();
+  const gname = (g) => (board.names && String(board.names[g - 1] || "").trim()) || (g + "-топ");
   el.innerHTML = `
     <div class="board-host">
       <div class="board-topic">🎯 ${esc(board.topic)}</div>
@@ -288,7 +289,7 @@ function startBoardHost(s, el) {
       (_, i) => `
     <div class="qr-box">
       ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 96)}
-      <div style="margin-top:5px;font-weight:800;color:${GROUP_COLORS[i]}">${i + 1}-топ</div>
+      <div style="margin-top:5px;font-weight:800;color:${GROUP_COLORS[i]}">${esc(gname(i + 1))}</div>
     </div>`
     ).join("") +
     `<div class="qr-box" style="align-self:center">
@@ -311,6 +312,7 @@ function startBoardHost(s, el) {
           topic: board.topic,
           branches: board.branches,
           groups: board.groups,
+          names: board.names,
           ideas: ideas.filter((i) => i.g === conn.player.g),
         });
         updateBplayers();
@@ -347,7 +349,7 @@ function startBoardHost(s, el) {
       const list = ideas.filter((i) => i.g === g);
       return `
       <div class="board-group">
-        <h4><span class="dot" style="background:${GROUP_COLORS[gi]}"></span>${g}-топ · ${list.length} ой</h4>
+        <h4><span class="dot" style="background:${GROUP_COLORS[gi]}"></span>${esc(gname(g))} · ${list.length} ой</h4>
         ${
           list
             .map(

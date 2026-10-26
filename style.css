@@ -320,6 +320,7 @@ body {
   border: 1px solid var(--line); cursor: zoom-in;
 }
 .ach-add { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.gname-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 7px; vertical-align: baseline; }
 .ach-del { border: 0; background: none; color: #be123c; cursor: pointer; font-size: 1rem; }
 /* Суретті үлкейтіп көрсету */
 .lightbox {
