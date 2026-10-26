@@ -299,14 +299,19 @@ function startBoardHost(s, el) {
   const gname = (g) => (board.names && String(board.names[g - 1] || "").trim()) || (g + "-топ");
   el.innerHTML = `
     <div class="board-host">
-      <div class="board-topic">🎯 ${esc(board.topic)}</div>
+      <div class="board-topic-row">
+        <div class="board-topic">🎯 ${esc(board.topic)}</div>
+        <div class="board-room"><span>Бөлме коды</span><b>${code}</b></div>
+      </div>
       <div class="qr-row" id="bqr"></div>
       <div class="board-groups" id="bgroups"></div>
       <div class="board-err" id="berr"></div>
-      <div class="board-status" id="bstatus"></div>
-      <div style="display:flex;align-items:center;gap:12px">
-        <button class="host-btn" id="bstart" style="padding:10px 22px;font-size:1rem">🚀 Ойынды бастау</button>
-        <button class="host-btn green" id="bfinish" style="display:none;margin-left:auto;padding:10px 20px;font-size:0.9rem">✅ Аяқтау</button>
+      <div class="board-bottom">
+        <div class="board-status" id="bstatus"></div>
+        <div style="display:flex;gap:12px;flex-shrink:0">
+          <button class="host-btn" id="bstart" style="padding:10px 24px;font-size:1.05rem">🚀 Ойынды бастау</button>
+          <button class="host-btn green" id="bfinish" style="display:none;padding:10px 20px;font-size:0.95rem">✅ Аяқтау</button>
+        </div>
       </div>
     </div>`;
 
@@ -314,16 +319,12 @@ function startBoardHost(s, el) {
     Array.from(
       { length: board.groups },
       (_, i) => `
-    <div class="qr-box big">
-      ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 260)}
-      <div style="margin-top:10px;font-weight:800;color:${GROUP_COLORS[i]};font-size:1.35rem">${esc(gname(i + 1))}</div>
+    <div class="qr-box">
+      ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 400)}
+      <div style="margin-top:8px;font-weight:800;color:${GROUP_COLORS[i]};font-size:1.5rem">${esc(gname(i + 1))}</div>
       <div class="qr-players" data-g="${i + 1}"></div>
     </div>`
-    ).join("") +
-    `<div class="qr-box" style="align-self:center">
-      <div style="font-size:2rem;font-weight:800;color:#fde68a;letter-spacing:2px">${code}</div>
-      <div style="margin-top:8px;font-size:1rem">Бөлме коды</div>
-    </div>`;
+    ).join("");
 
   let ideas = [];
   let started = false;
