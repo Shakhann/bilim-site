@@ -23,7 +23,15 @@ const teachers = getTeachers();
 if (!teachers.some((t) => String(t.id) === String(teacherId))) teacherId = teachers[0].id;
 
 const T = () => teachers.find((t) => String(t.id) === String(teacherId));
-const persist = () => saveTeachers(teachers);
+const persist = () => {
+  try {
+    saveTeachers(teachers);
+    return true;
+  } catch {
+    toast("⚠️ Браузер жады толық — кейбір файлдарды өшіріп көріңіз");
+    return false;
+  }
+};
 
 /* ---------- Profil ---------- */
 function renderProfile() {
@@ -70,6 +78,12 @@ function renderSelects() {
 }
 
 /* ---------- Serdikat ---- */
+function certMedia(c) {
+  const kind = c.kind || "image";
+  if (kind === "image") return `<img src="${c.data}" alt="${esc(c.name)}" />`;
+  return `<div class="cert-file"><span class="cert-file-ico">${fileIcon(c.fname || c.name)}</span><span class="cert-file-name">${esc(c.fname || "Файл")}</span></div>`;
+}
+
 function renderCerts() {
   const t = T();
   const grid = $("#certs-grid");
@@ -81,7 +95,7 @@ function renderCerts() {
     .map(
       (c, i) => `
     <div class="cert-card">
-      <img src="${c.data}" alt="${esc(c.name)}" />
+      ${certMedia(c)}
       <div class="cert-name">${esc(c.name)}</div>
       <button class="cert-del" data-i="${i}" title="Жою">✕</button>
     </div>`
@@ -89,41 +103,64 @@ function renderCerts() {
     .join("");
   grid.onclick = (e) => {
     const btn = e.target.closest(".cert-del");
-    if (!btn) return;
-    T().certs.splice(+btn.dataset.i, 1);
-    persist();
-    renderCerts();
-    toast("Сертификат жойылды");
+    if (btn) {
+      T().certs.splice(+btn.dataset.i, 1);
+      if (persist()) renderCerts();
+      toast("Сертификат жойылды");
+      return;
+    }
+    /* Суретке/файлға басу — ашу */
+    const card = e.target.closest(".cert-card");
+    if (card) {
+      const c = T().certs[[...card.parentElement.children].indexOf(card)];
+      if (!c) return;
+      if ((c.kind || "image") === "image") {
+        const ov = document.createElement("div");
+        ov.className = "lightbox";
+        ov.innerHTML = `<img src="${c.data}" alt="" />`;
+        ov.onclick = () => ov.remove();
+        document.body.appendChild(ov);
+      } else openFileDataUrl(c.data);
+    }
   };
 }
 
 let pendingCertFile = null;
 $("#cert-file").addEventListener("change", (e) => {
   pendingCertFile = e.target.files[0] || null;
-  if (pendingCertFile) toast("📎 Сурет таңдалды: " + pendingCertFile.name);
+  if (pendingCertFile) toast("📎 Файл таңдалды: " + pendingCertFile.name);
 });
 
 $("#cert-add").addEventListener("click", async () => {
-  if (!pendingCertFile) return toast("Алдымен сурет таңдаңыз");
-  const name = $("#cert-name").value.trim() || pendingCertFile.name;
+  if (!pendingCertFile) return toast("Алдымен файл таңдаңыз (сурет, PDF, Word...)");
+  const f = pendingCertFile;
+  const name = $("#cert-name").value.trim() || f.name.replace(/\.[^.]+$/, "");
   try {
-    const data = await fileToDataUrl(pendingCertFile, 900);
-    T().certs.unshift({ name, data });
-    persist();
+    let cert;
+    if (f.type.startsWith("image/")) {
+      cert = { name, kind: "image", data: await fileToDataUrl(f, 900) };
+    } else {
+      if (f.size > 2 * 1024 * 1024) return toast("⚠️ Файл 2MB-тан үлкен — кішірейтіп жүктеңіз");
+      cert = { name, kind: "file", data: await fileToRawDataUrl(f), fname: f.name, mime: f.type };
+    }
+    T().certs.unshift(cert);
+    if (!persist()) return;
     renderCerts();
     $("#cert-name").value = "";
     $("#cert-file").value = "";
     pendingCertFile = null;
     toast("✅ Сертификат қосылды");
   } catch {
-    toast("Қате: сурет өте үлкен болуы мүмкін");
+    toast("Қате: файлты оқу мүмкін болмады");
   }
 });
 
 /* ---------- Zhetistikter ---------- */
-/* Жетістік: жай мәтін немесе {text, img} (суретті файл) */
+/* Жетістік: жай мәтін немесе {text, att} (att = {kind:"image"|"file", data, fname?}) */
 function normAch(a) {
-  return typeof a === "string" ? { text: a, img: null } : a;
+  if (typeof a === "string") return { text: a, att: null };
+  const att = a.att || (a.img ? { kind: "image", data: a.img } : null);
+  return { text: a.text || "", att };
 }
 
 function renderAch() {
@@ -133,8 +170,14 @@ function renderAch() {
     ? t.achievements
         .map((a, i) => {
           const item = normAch(a);
-          const img = item.img ? `<img class="ach-thumb" src="${item.img}" alt="" />` : "";
-          return `<div class="ach-item${item.img ? " has-img" : ""}">${img}<span>🏆 ${esc(item.text || "Сурет")}</span><button class="ach-del" data-i="${i}">✕</button></div>`;
+          let media = "";
+          if (item.att) {
+            media = item.att.kind === "image"
+              ? `<img class="ach-thumb" src="${item.att.data}" alt="" />`
+              : `<span class="ach-file" title="Ашу үшін басыңыз">${fileIcon(item.att.fname)} <span class="fname">${esc(item.att.fname || "Файл")}</span></span>`;
+          }
+          const textPart = item.text ? `<span>🏆 ${esc(item.text)}</span>` : "";
+          return `<div class="ach-item${item.att ? (item.att.kind === "image" ? " has-img" : " has-file") : ""}">${media}${textPart}<button class="ach-del" data-i="${i}">✕</button></div>`;
         })
         .join("")
     : '<p class="certs-empty">Әзірге жетістік жоқ.</p>';
@@ -142,50 +185,59 @@ function renderAch() {
     const btn = e.target.closest(".ach-del");
     if (btn) {
       T().achievements.splice(+btn.dataset.i, 1);
-      persist();
-      renderAch();
+      if (persist()) renderAch();
       return;
     }
-    /* Суретке басу — үлкейтіп көрсету */
-    const img = e.target.closest(".ach-thumb");
-    if (img) {
+    const idx = [...list.children].indexOf(e.target.closest(".ach-item"));
+    if (idx < 0) return;
+    const item = normAch(T().achievements[idx]);
+    if (!item.att) return;
+    if (item.att.kind === "image") {
       const ov = document.createElement("div");
       ov.className = "lightbox";
-      ov.innerHTML = `<img src="${img.src}" alt="" />`;
+      ov.innerHTML = `<img src="${item.att.data}" alt="" />`;
       ov.onclick = () => ov.remove();
       document.body.appendChild(ov);
-    }
+    } else openFileDataUrl(item.att.data);
   };
 }
 
-let achImg = null; /* суретті уақытша сақтау */
+let achFile = null; /* таңдалған файлды уақытша сақтау */
 
-function addAch() {
+async function addAch() {
   const v = $("#ach-input").value.trim();
-  if (!v && !achImg) return toast("Жетістік жазыңыз немесе сурет таңдаңыз");
-  const t = T();
-  t.achievements.unshift({ text: v, img: achImg });
-  persist();
+  if (!v && !achFile) return toast("Жетістік жазыңыз немесе файл таңдаңыз");
+  let att = null;
+  if (achFile) {
+    try {
+      if (achFile.type.startsWith("image/")) {
+        att = { kind: "image", data: await fileToDataUrl(achFile) };
+      } else {
+        if (achFile.size > 2 * 1024 * 1024) return toast("⚠️ Файл 2MB-тан үлкен — кішірейтіп жүктеңіз");
+        att = { kind: "file", data: await fileToRawDataUrl(achFile), fname: achFile.name };
+      }
+    } catch {
+      return toast("Файлды оқу мүмкін болмады");
+    }
+  }
+  T().achievements.unshift({ text: v, att });
+  if (!persist()) return;
   renderAch();
   $("#ach-input").value = "";
-  achImg = null;
+  achFile = null;
   const f = $("#ach-file");
   if (f) f.value = "";
-  $("#ach-file-btn").textContent = "📎 Сурет таңда";
+  $("#ach-file-btn").textContent = "📎 Файл таңда";
   renderStats();
   toast("✅ Жетістік қосылды");
 }
 $("#ach-add").addEventListener("click", addAch);
 $("#ach-input").addEventListener("keydown", (e) => e.key === "Enter" && addAch());
-$("#ach-file").addEventListener("change", async (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  try {
-    achImg = await fileToDataUrl(file);
-    $("#ach-file-btn").textContent = "✅ Сурет таңдалды";
-  } catch (err) {
-    toast("Суретті оқу мүмкін болмады");
-  }
+$("#ach-file").addEventListener("change", (e) => {
+  const file = e.target.files[0] || null;
+  achFile = file;
+  $("#ach-file-btn").textContent = file ? "✅ " + (file.name.length > 18 ? file.name.slice(0, 18) + "…" : file.name) : "📎 Файл таңда";
+  if (file) toast("📎 Файл таңдалды: " + file.name);
 });
 
 /* ---------- Jyldyq synyp ---- */

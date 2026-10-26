@@ -69,15 +69,14 @@
         <div class="ach-list" id="ach-list"></div>
         <div class="ach-add">
           <input type="text" id="ach-input" placeholder="Мыс: Өңірлік олимпиада жеңімпазы" />
-          <label class="file-btn" for="ach-file" id="ach-file-btn">📎 Сурет таңда</label>
-          <input type="file" id="ach-file" accept="image/*" hidden />
+          <label class="file-btn" for="ach-file" id="ach-file-btn">📎 Файл таңда</label>
+          <input type="file" id="ach-file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" hidden />
           <button class="btn btn-primary" id="ach-add" style="padding:10px 18px">＋</button>
         </div>
       </div>
 
       <div class="panel">
         <h2>📅 Жыл бойынша сыныптар</h2>
-        <p class="sub">Мысалы: 2026 — 6Б, 7В, 9А</p>
         <div class="years-classes" id="years-classes"></div>
       </div>
 
@@ -96,45 +95,47 @@
         <div class="certs-grid" id="certs-grid"></div>
         <div class="certs-add">
           <input type="text" id="cert-name" placeholder="Сертификат аты (мыс: «Цифрлық сауаттылық», 2026)" />
-          <label class="file-btn" for="cert-file">📎 Сурет таңда</label>
-          <input type="file" id="cert-file" accept="image/*" />
+          <label class="file-btn" for="cert-file">📎 Файл таңда</label>
+          <input type="file" id="cert-file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" />
           <button class="btn btn-primary" id="cert-add" style="padding:10px 20px">Қосу</button>
-        </div>
-      </div>
-
-      <!-- Расписание -->
-      <div class="panel">
-        <div class="panel-head">
-          <h2>🗓️ Апталық расписание — <span id="sched-year" style="color:var(--brand)"></span> жыл</h2>
-          <p class="sub">Қай күні, қай уақытта, қай кабинетке. 1 сабақ — 45 минут, үзіліс — 5 минут. Тордың көзеге басу — жазбаны жою.</p>
-        </div>
-
-        <div class="sched-stats" id="sched-stats"></div>
-
-        <div class="shift-title">🌅 Таңертеңгі ауысым</div>
-        <div class="sched-scroll"><table class="sched-grid" id="grid-am"></table></div>
-
-        <div class="shift-title">🌇 Түстен кейінгі ауысым</div>
-        <div class="sched-scroll"><table class="sched-grid" id="grid-pm"></table></div>
-
-        <div class="shift-title" style="margin-top:26px">➕ Сабақ қосу</div>
-        <div class="sched-add" id="sched-add">
-          <label>Күн <select id="sa-day"></select></label>
-          <label>Ауысым
-            <select id="sa-shift">
-              <option value="am">Таңертеңгі</option>
-              <option value="pm">Түстен кейін</option>
-            </select>
-          </label>
-          <label>Сабақ <select id="sa-period"></select></label>
-          <label>Сынып <input type="text" id="sa-cls" placeholder="мыс: 6Б" maxlength="6" /></label>
-          <label>Кабинет <input type="text" id="sa-room" placeholder="мыс: 204" maxlength="8" /></label>
-          <label><span></span><button class="btn btn-primary" id="sa-add">Қосу</button></label>
         </div>
       </div>
 
     </div>
   </main>
+
+  <!-- Расписание — толық енімен, ортада -->
+  <div class="cab-sched-wrap">
+    <div class="panel">
+      <div class="panel-head">
+        <h2>🗓️ Апталық расписание — <span id="sched-year" style="color:var(--brand)"></span> жыл</h2>
+        <p class="sub">Қай күні, қай уақытта, қай кабинетке. 1 сабақ — 45 минут, үзіліс — 5 минут. Тордың көзеге басу — жазбаны жою.</p>
+      </div>
+
+      <div class="sched-stats" id="sched-stats"></div>
+
+      <div class="shift-title">🌅 Таңертеңгі ауысым</div>
+      <div class="sched-scroll"><table class="sched-grid" id="grid-am"></table></div>
+
+      <div class="shift-title">🌇 Түстен кейінгі ауысым</div>
+      <div class="sched-scroll"><table class="sched-grid" id="grid-pm"></table></div>
+
+      <div class="shift-title" style="margin-top:26px">➕ Сабақ қосу</div>
+      <div class="sched-add" id="sched-add">
+        <label>Күн <select id="sa-day"></select></label>
+        <label>Ауысым
+          <select id="sa-shift">
+            <option value="am">Таңертеңгі</option>
+            <option value="pm">Түстен кейін</option>
+          </select>
+        </label>
+        <label>Сабақ <select id="sa-period"></select></label>
+        <label>Сынып <input type="text" id="sa-cls" placeholder="мыс: 6Б" maxlength="6" /></label>
+        <label>Кабинет <input type="text" id="sa-room" placeholder="мыс: 204" maxlength="8" /></label>
+        <label><span></span><button class="btn btn-primary" id="sa-add">Қосу</button></label>
+      </div>
+    </div>
+  </div>
 
   <footer class="footer">
     <div class="container footer-inner">

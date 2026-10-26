@@ -53,6 +53,38 @@ function fileToDataUrl(file, maxW = 900) {
   });
 }
 
+/* Кез келген файлды (PDF, Word...) dataURL-ға оқу */
+function fileToRawDataUrl(file) {
+  return new Promise((resolve, reject) => {
+    const fr = new FileReader();
+    fr.onerror = reject;
+    fr.onload = () => resolve(fr.result);
+    fr.readAsDataURL(file);
+  });
+}
+
+/* Файл dataURL-ын жаңа қышқа ашу (PDF екенде көрінеді) */
+function openFileDataUrl(dataUrl) {
+  fetch(dataUrl)
+    .then((r) => r.blob())
+    .then((b) => {
+      const u = URL.createObjectURL(b);
+      window.open(u, "_blank");
+      setTimeout(() => URL.revokeObjectURL(u), 60000);
+    })
+    .catch(() => toast("Файлды ашу мүмкін болмады"));
+}
+
+/* Файл кеңейтіміне сәйкес иконка */
+function fileIcon(name) {
+  const e = (name || "").split(".").pop().toLowerCase();
+  if (e === "pdf") return "📕";
+  if (e === "doc" || e === "docx") return "📘";
+  if (e === "xls" || e === "xlsx") return "📗";
+  if (e === "ppt" || e === "pptx") return "📙";
+  return "📄";
+}
+
 /* ---------- Realtime: мұғалім = host, оқушы = join (PeerJS/WebRTC) ---------- */
 
 function rtHost(code, h = {}) {

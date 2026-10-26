@@ -289,7 +289,13 @@ body {
 /* Сертификаттар */
 .certs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
 .cert-card { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: var(--bg); position: relative; }
-.cert-card img { width: 100%; height: 150px; object-fit: cover; display: block; }
+.cert-card img { width: 100%; height: 150px; object-fit: cover; display: block; cursor: zoom-in; }
+.cert-file {
+  width: 100%; height: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;
+  background: linear-gradient(160deg, #eef2ff, #faf5ff); cursor: pointer;
+}
+.cert-file-ico { font-size: 2.4rem; line-height: 1; }
+.cert-file-name { font-size: 0.78rem; font-weight: 700; color: #3730a3; text-align: center; padding: 0 10px; word-break: break-all; }
 .cert-card .cert-name { padding: 10px 12px; font-size: 0.85rem; font-weight: 700; }
 .cert-del {
   position: absolute; top: 8px; right: 8px; width: 28px; height: 28px; border-radius: 50%;
@@ -315,6 +321,12 @@ body {
 .ach-item.has-img {
   display: grid; grid-template-columns: 76px 1fr auto; gap: 12px; align-items: center; padding: 10px;
 }
+.ach-item.has-file { display: flex; align-items: center; gap: 10px; }
+.ach-file {
+  display: inline-flex; align-items: center; gap: 6px; background: #eef2ff; color: #3730a3;
+  font-size: 0.82rem; font-weight: 700; padding: 8px 14px; border-radius: 999px; cursor: pointer; max-width: 100%;
+}
+.ach-file .fname { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 220px; }
 .ach-thumb {
   width: 76px; height: 76px; object-fit: cover; border-radius: 10px;
   border: 1px solid var(--line); cursor: zoom-in;
@@ -350,8 +362,8 @@ body {
 .sched-stat { background: var(--brand-soft); color: var(--brand); border-radius: 14px; padding: 14px 20px; font-weight: 700; }
 .sched-stat b { font-size: 1.4rem; display: block; }
 .sched-stat span { font-size: 0.8rem; }
-.sched-grid { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 26px; }
-.sched-grid th, .sched-grid td { border: 1px solid var(--line); padding: 8px 10px; text-align: center; }
+.sched-grid { width: 100%; border-collapse: collapse; font-size: 0.98rem; margin-bottom: 26px; }
+.sched-grid th, .sched-grid td { border: 1px solid var(--line); padding: 13px 12px; text-align: center; }
 .sched-grid th { background: var(--bg); font-weight: 800; }
 .sched-grid td.time { background: var(--bg); font-weight: 700; color: var(--muted); white-space: nowrap; }
 .sched-cell { min-height: 52px; position: relative; cursor: pointer; }
@@ -360,7 +372,12 @@ body {
 .sched-cell .room { color: var(--muted); font-size: 0.78rem; }
 .sched-cell .x { display: none; position: absolute; top: 2px; right: 4px; color: #be123c; font-weight: 800; }
 .sched-cell:hover .x { display: block; }
-.shift-title { font-size: 1rem; font-weight: 800; margin: 20px 0 10px; }
+.shift-title { font-size: 1.15rem; font-weight: 800; margin: 20px 0 10px; }
+/* Расписание — толық енімен, ортада */
+.cab-sched-wrap { max-width: 1120px; margin: 26px auto 0; padding: 0 20px; box-sizing: border-box; }
+.cab-sched-wrap .panel-head { text-align: center; }
+.cab-sched-wrap .sched-stats { justify-content: center; }
+.cab-sched-wrap .shift-title { text-align: center; }
 .sched-add { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; align-items: end; }
 .sched-add label { font-size: 0.8rem; font-weight: 700; color: var(--muted); display: flex; flex-direction: column; gap: 5px; }
 .sched-add select, .sched-add input {
