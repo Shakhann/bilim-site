@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Сабақ слайдтары — Білім</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">🎓</span>
+        <span class="logo-text">Білім<span class="logo-accent">мектеп</span></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="index.html">Басты бет</a>
+        <a href="cabinet.html">Кабинет</a>
+        <a href="slides.html" class="nav-cta">Сабақ слайдтары</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Мәзір"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <section class="page-head">
+    <div class="container">
+      <h1>📽️ Сабақ слайдтары</h1>
+      <p>Канва сияқты оңай конструктор: мәтін, видео, алдын ала дайындалған ойындар</p>
+    </div>
+  </section>
+
+  <main class="container" style="padding-top:28px">
+
+    <div class="tabs">
+      <button class="tab-btn active" data-view="lessons">📽️ Сабақтар</button>
+      <button class="tab-btn" data-view="games">🎮 Ойындар (тест + топтық)</button>
+    </div>
+
+    <!-- ===== Lessons ===== -->
+    <section id="view-lessons">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:18px">
+        <p class="muted">Сабақ алдын ала дайындап қойыңыз — сабақ кезінде бір батырмамен көрсетіледі</p>
+        <button class="btn btn-primary" id="new-lesson">＋ Жаңа сабақ</button>
+      </div>
+      <div class="lessons-grid" id="lessons-grid"></div>
+    </section>
+
+    <!-- ===== Builder ===== -->
+    <section id="view-builder" style="display:none">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:16px">
+        <a class="mini-btn" href="#" id="back-to-lessons">← Сабақтарға оралу</a>
+        <input type="text" id="lesson-title" placeholder="Сабақ атауы" style="flex:1;min-width:220px;padding:10px 16px;border:1px solid var(--line);border-radius:12px;font-family:inherit;font-size:1rem" />
+        <a class="btn btn-primary" id="open-present" href="#" style="padding:10px 20px">▶ Көрсету режимі</a>
+      </div>
+      <div class="builder">
+        <div class="slides-rail" id="slides-rail"></div>
+        <div class="canvas-stage">
+          <div class="slide-canvas" id="slide-canvas"></div>
+        </div>
+        <div class="props" id="props-panel"></div>
+      </div>
+    </section>
+
+    <!-- ===== Games ===== -->
+    <section id="view-games" style="display:none">
+      <h2 style="font-size:1.2rem;margin-bottom:6px">🎯 Kahoot-тай тесттер</h2>
+      <p class="muted" style="margin-bottom:16px">Сұрақтарды алдын ала жасап сақтаңыз — слайд арасына қосып, сабақта QR арқылы көрсетесіз</p>
+      <div class="qz-list" id="quizzes-list"></div>
+      <div class="panel" id="quiz-editor-panel">
+        <h2 id="quiz-editor-title">Жаңа тест</h2>
+        <p class="sub">Тестті құрастыру</p>
+        <div class="qz-editor">
+          <div>
+            <label class="props" style="border:0;padding:0;background:none">
+              <span>Тест атауы</span>
+              <input type="text" id="qz-name" placeholder="Мыс: Алгебра, §12" />
+            </label>
+            <label class="props" style="border:0;padding:0;background:none;margin-top:12px">
+              <span>Сұраққа уақыт (секунд)</span>
+              <input type="number" id="qz-time" min="5" max="120" value="20" />
+            </label>
+            <div style="margin-top:18px;display:flex;gap:10px">
+              <button class="btn btn-primary" id="qz-save" style="padding:11px 22px">💾 Сақтау</button>
+              <button class="btn btn-ghost" id="qz-cancel" style="padding:11px 22px">Бас тарту</button>
+            </div>
+          </div>
+          <div>
+            <button class="mini-btn" id="qz-add-q">＋ Сұрақ қосу</button>
+            <div id="qz-questions"></div>
+          </div>
+        </div>
+      </div>
+
+      <h2 style="font-size:1.2rem;margin:34px 0 6px">👥 Топтық ойындар (ой-жүгірту картасы)</h2>
+      <p class="muted" style="margin-bottom:16px">Ортада тақырып, оған тарақтары — әр топ өз QR арқылы кіріп, тақырыпқа өз ойын қосады</p>
+      <div class="board-list" id="boards-list"></div>
+      <div class="panel">
+        <h2 id="board-editor-title">Жаңа топтық ойын</h2>
+        <p class="sub">Жоспар құрастыру</p>
+        <div class="qz-editor">
+          <div>
+            <label class="props" style="border:0;padding:0;background:none"><span>Атауы</span><input type="text" id="bd-name" placeholder="Мыс: «Білімнің пайдасы»" /></label>
+            <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span>Ортадағы тақырып</span><input type="text" id="bd-topic" placeholder="Тақырып мәтіні" /></label>
+            <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span>Тарақтары (үтірмен)</span><input type="text" id="bd-branches" placeholder="Мыс: Денсаулық, Болашақ, Қоғам" /></label>
+            <label class="props" style="border:0;padding:0;background:none;margin-top:12px"><span>Топ саны</span><input type="number" id="bd-groups" min="2" max="6" value="3" /></label>
+            <div style="margin-top:18px;display:flex;gap:10px">
+              <button class="btn btn-primary" id="bd-save" style="padding:11px 22px">💾 Сақтау</button>
+              <button class="btn btn-ghost" id="bd-cancel" style="padding:11px 22px">Бас тарту</button>
+            </div>
+          </div>
+          <div id="board-preview" style="background:var(--bg);border-radius:12px;padding:18px">
+            <div class="board-topic" id="bp-topic" style="color:var(--ink);background:var(--brand-soft)">Тақырып</div>
+            <div id="bp-branches" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px"></div>
+            <div id="bp-groups" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Білім мектебі</span>
+      <span class="muted">Дайындалу оңай, сабақ қызықты 🤝</span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="ui.js"></script>
+  <script src="slides.js"></script>
+</body>
+</html>

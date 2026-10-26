@@ -1,0 +1,148 @@
+/* ===== Білім мектепі — ортақ деректер мен сақтау ===== */
+
+/* Апталық кесте: 1 сабақ = 45 минут, үзіліс 5 минут */
+const PERIODS = {
+  am: [
+    ["08:00", "08:45"],
+    ["08:50", "09:35"],
+    ["09:40", "10:25"],
+    ["10:30", "11:15"],
+    ["11:20", "12:05"],
+    ["12:10", "12:55"],
+    ["13:00", "13:45"],
+  ],
+  pm: [
+    ["14:00", "14:45"],
+    ["14:50", "15:35"],
+    ["15:40", "16:25"],
+    ["16:30", "17:15"],
+    ["17:20", "18:05"],
+    ["18:10", "18:55"],
+    ["19:00", "19:45"],
+  ],
+};
+const SHIFTS = { am: "Таңертеңгі ауысым", pm: "Түстен кейінгі ауысым" };
+const DAYS = ["Дүйсенбі", "Сейсенбі", "Сарысенбі", "Бейсенбі", "Жұма"];
+const DAYS_SHORT = ["Дс", "Сс", "Ср", "Бс", "Жм"];
+const YEARS = [2027, 2026, 2025, 2024];
+
+const GROUP_COLORS = ["#ef4444", "#3b82f6", "#f59e0b", "#22c55e", "#a855f7", "#14b8a6"];
+const QUIZ_COLORS = ["#ef4444", "#f59e0b", "#3b82f6", "#22c55e"];
+const SLIDE_BGS = ["#eef0ff", "#f0fdf4", "#fff7ed", "#fdf2f8", "#ecfeff", "#ffffff", "#1e293b", "#312e81"];
+
+/* ---------- Saqtaw (localStorage) ---------- */const store = {
+  get(key, fallback) {
+    try {
+      const v = JSON.parse(localStorage.getItem(key));
+      return v === null || v === undefined ? fallback : v;
+    } catch {
+      return fallback;
+    }
+  },
+  set(key, val) {
+    localStorage.setItem(key, JSON.stringify(val));
+  },
+  del(key) {
+    localStorage.removeItem(key);
+  },
+};
+
+const uid = () => Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+const ROOM_CHARS = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+const roomCode = (n = 5) =>
+  Array.from({ length: n }, () => ROOM_CHARS[Math.floor(Math.random() * ROOM_CHARS.length)]).join("");
+
+const esc = (s) =>
+  String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+/* ---------- Mugalimder ---------- */
+const TEACHERS_BASE = [
+  { name: "Айгерім Сатыбаева", subject: "Қазақ тілі мен әдебиеті", exp: "Тәжірибесі 14 жыл", color: "#4f46e5" },
+  { name: "Ерлан Қасымов", subject: "Математика", exp: "Тәжірибесі 9 жыл", color: "#7c3aed" },
+  { name: "Гүлнәр Оспанова", subject: "Физика", exp: "Тәжірибесі 11 жыл", color: "#0ea5e9" },
+  { name: "Дәурен Исаев", subject: "Тарих", exp: "Тәжірибесі 17 жыл", color: "#f59e0b" },
+  { name: "Махаббат Нұрмағамбетова", subject: "Англис тілі", exp: "Тәжірибесі 7 жыл", color: "#10b981" },
+  { name: "Серік Төлеубек", subject: "Информатика", exp: "Тәжірибесі 6 жыл", color: "#ef4444" },
+];
+
+function sampleQuiz() {
+  return {
+    id: uid(),
+    title: "Қазақ әдебиеті — жылжытып тексеру",
+    time: 20,
+    questions: [
+      {
+        q: "«Абай жолы» романының авторы кім?",
+        answers: ["Сәкен Сейфуллин", "Мұхтар Әуезов", "Бейімбет Майлин", "Илияс Жансүгіров"],
+        correct: 1,
+      },
+      {
+        q: "«Қара сүмбіле» повесінің авторы кім?",
+        answers: ["Мұхтар Әуезов", "Сәбит Дұлатов", "Бейімбет Майлин", "Жамбыл Жабаев"],
+        correct: 2,
+      },
+      {
+        q: "Абай Құнанбайұлы қай жылы дүниеге келген?",
+        answers: ["1835", "1850", "1860", "1845"],
+        correct: 3,
+      },
+    ],
+  };
+}
+
+function sampleBoard() {
+  return {
+    id: uid(),
+    title: "Білім туралы топтық ой",
+    topic: "Білімнің пайдасы",
+    branches: ["Денсаулық", "Болашақ кәсіп", "Қоғамдағы орын"],
+    groups: 3,
+  };
+}
+
+/* Birinshi ret — seed. Mugalimder localStorage-de jalpy saqtalady */
+function ensureSeed() {
+  if (!store.get("bilim.teachers")) {
+    const t = TEACHERS_BASE.map((x, i) => ({
+      ...x,
+      id: i,
+      certs: [],
+      achievements: [],
+      years: {},
+      schedule: [],
+    }));
+    /* Mysaly: 2026 jyly Aygerim S — 6B, 7V, 9A */
+    t[0].years = { 2026: ["6Б", "7В", "9А"] };
+    t[0].schedule = [
+      { day: 0, shift: "am", period: 1, cls: "6Б", room: "204" },
+      { day: 0, shift: "am", period: 2, cls: "7В", room: "204" },
+      { day: 0, shift: "am", period: 3, cls: "9А", room: "205" },
+      { day: 1, shift: "am", period: 1, cls: "9А", room: "205" },
+      { day: 1, shift: "pm", period: 1, cls: "6Б", room: "204" },
+      { day: 1, shift: "pm", period: 2, cls: "7В", room: "204" },
+      { day: 2, shift: "am", period: 2, cls: "6Б", room: "204" },
+      { day: 2, shift: "am", period: 3, cls: "7В", room: "204" },
+      { day: 2, shift: "pm", period: 1, cls: "9А", room: "205" },
+      { day: 3, shift: "am", period: 1, cls: "7В", room: "204" },
+      { day: 3, shift: "pm", period: 2, cls: "6Б", room: "204" },
+      { day: 4, shift: "am", period: 2, cls: "9А", room: "205" },
+      { day: 4, shift: "am", period: 3, cls: "7В", room: "204" },
+      { day: 4, shift: "pm", period: 1, cls: "6Б", room: "204" },
+    ];
+    store.set("bilim.teachers", t);
+  }
+  if (!store.get("bilim.quizzes")) store.set("bilim.quizzes", [sampleQuiz()]);
+  if (!store.get("bilim.boards")) store.set("bilim.boards", [sampleBoard()]);
+  if (!store.get("bilim.lessons")) store.set("bilim.lessons", []);
+}
+
+function getTeachers() {
+  ensureSeed();
+  return store.get("bilim.teachers", []);
+}
+function getTeacher(id) {
+  return getTeachers().find((t) => String(t.id) === String(id)) || getTeachers()[0];
+}
+function saveTeachers(list) {
+  store.set("bilim.teachers", list);
+}

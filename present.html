@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Көрсету режимі — Білім</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+  <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+</head>
+<body class="present">
+
+  <div class="present-top">
+    <span id="p-title">🎓 Сабақ</span>
+    <span style="display:flex;gap:8px">
+      <button class="btn-sm" id="exit-btn">✕ Шығу</button>
+    </span>
+  </div>
+
+  <div class="present-main">
+    <div class="present-slide" id="slide"></div>
+  </div>
+
+  <div class="present-bottom">
+    <button class="btn-sm" id="prev">← Алдыңғы</button>
+    <span class="slide-counter" id="counter">1 / 1</span>
+    <button class="btn-sm" id="next">Келесі →</button>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="ui.js"></script>
+  <script src="present.js"></script>
+</body>
+</html>
