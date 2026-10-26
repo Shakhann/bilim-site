@@ -7,10 +7,10 @@
     document.body.insertAdjacentHTML(
       "afterbegin",
       `<div class="gate-overlay"><div class="gate-card"><h2>🔒 ${
-        s ? "Бұл бет тек мұғалімдерге арналған" : "Кіру қажет"
+        s ? t("gate_teacher_only") : t("gate_login")
       }</h2><p class="muted">${
-        s ? "Сіз оқушы ретінде кіргенсіз. Кабинет — мұғалімдерге ғана ашылады." : "Мұғалім ретінде тіркеліңіз немесе кіріңіз (Google-мен де болады)"
-      }</p><a class="btn btn-primary" href="auth.html">Кіру / Тіркелу</a><a class="btn btn-ghost" href="index.html">Басты бетке</a></div></div>`
+        s ? t("gate_student") : t("gate_register")
+      }</p><a class="btn btn-primary" href="auth.html">${t("btn_login_reg")}</a><a class="btn btn-ghost" href="index.html">${t("nav_home")}</a></div></div>`
     );
     throw new Error("auth gate: cabinet");
   }
@@ -28,30 +28,29 @@ const persist = () => {
     saveTeachers(teachers);
     return true;
   } catch {
-    toast("⚠️ Браузер жады толық — кейбір файлдарды өшіріп көріңіз");
+    toast(t("quota_full"));
     return false;
   }
 };
 
 /* ---------- Profil ---------- */
 function renderProfile() {
-  const t = T();
+  const tc = T();
   const av = $("#cab-avatar");
-  av.textContent = initials2(t.name);
-  av.style.background = t.color;
-  $("#cab-name").textContent = t.name;
-  $("#cab-subject").textContent = "📚 " + t.subject;
-  $("#cab-exp").textContent = "⭐ " + t.exp;
+  av.textContent = initials2(tc.name);
+  av.style.background = tc.color;
+  $("#cab-name").textContent = tc.name;
+  $("#cab-subject").textContent = "📚 " + tc.subject;
+  $("#cab-exp").textContent = "⭐ " + tc.exp;
 }
 
 function renderStats() {
-  const t = T();
-  $("#stat-lessons").textContent = t.schedule.length;
-  const cls = new Set(t.schedule.map((s) => s.cls)).size;
+  const tc = T();
+  $("#stat-lessons").textContent = tc.schedule.length;
+  const cls = new Set(tc.schedule.map((s) => s.cls)).size;
   $("#stat-classes").textContent = cls;
-  $("#stat-classes-year").textContent = "расписаниедегі сынып";
-  $("#stat-certs").textContent = t.certs.length;
-  $("#stat-ach").textContent = t.achievements.length;
+  $("#stat-certs").textContent = tc.certs.length;
+  $("#stat-ach").textContent = tc.achievements.length;
 }
 
 function initials2(name) {
@@ -85,13 +84,13 @@ function certMedia(c) {
 }
 
 function renderCerts() {
-  const t = T();
+  const tc = T();
   const grid = $("#certs-grid");
-  if (!t.certs.length) {
-    grid.innerHTML = '<p class="certs-empty">Әзірге сертификат жоқ. Жоғарғы пішін арқылы қосыңыз.</p>';
+  if (!tc.certs.length) {
+    grid.innerHTML = '<p class="certs-empty">' + t("certs_empty") + "</p>";
     return;
   }
-  grid.innerHTML = t.certs
+  grid.innerHTML = tc.certs
     .map(
       (c, i) => `
     <div class="cert-card">
@@ -106,7 +105,7 @@ function renderCerts() {
     if (btn) {
       T().certs.splice(+btn.dataset.i, 1);
       if (persist()) renderCerts();
-      toast("Сертификат жойылды");
+      toast(t("cert_deleted"));
       return;
     }
     /* Суретке/файлға басу — ашу */
@@ -128,11 +127,11 @@ function renderCerts() {
 let pendingCertFile = null;
 $("#cert-file").addEventListener("change", (e) => {
   pendingCertFile = e.target.files[0] || null;
-  if (pendingCertFile) toast("📎 Файл таңдалды: " + pendingCertFile.name);
+  if (pendingCertFile) toast(t("file_selected") + pendingCertFile.name);
 });
 
 $("#cert-add").addEventListener("click", async () => {
-  if (!pendingCertFile) return toast("Алдымен файл таңдаңыз (сурет, PDF, Word...)");
+  if (!pendingCertFile) return toast(t("file_first"));
   const f = pendingCertFile;
   const name = $("#cert-name").value.trim() || f.name.replace(/\.[^.]+$/, "");
   try {
@@ -140,7 +139,7 @@ $("#cert-add").addEventListener("click", async () => {
     if (f.type.startsWith("image/")) {
       cert = { name, kind: "image", data: await fileToDataUrl(f, 900) };
     } else {
-      if (f.size > 2 * 1024 * 1024) return toast("⚠️ Файл 2MB-тан үлкен — кішірейтіп жүктеңіз");
+      if (f.size > 2 * 1024 * 1024) return toast(t("file_big"));
       cert = { name, kind: "file", data: await fileToRawDataUrl(f), fname: f.name, mime: f.type };
     }
     T().certs.unshift(cert);
@@ -149,9 +148,9 @@ $("#cert-add").addEventListener("click", async () => {
     $("#cert-name").value = "";
     $("#cert-file").value = "";
     pendingCertFile = null;
-    toast("✅ Сертификат қосылды");
+    toast(t("cert_added"));
   } catch {
-    toast("Қате: файлты оқу мүмкін болмады");
+    toast(t("file_read_err"));
   }
 });
 
@@ -164,10 +163,10 @@ function normAch(a) {
 }
 
 function renderAch() {
-  const t = T();
+  const tc = T();
   const list = $("#ach-list");
-  list.innerHTML = t.achievements.length
-    ? t.achievements
+  list.innerHTML = tc.achievements.length
+    ? tc.achievements
         .map((a, i) => {
           const item = normAch(a);
           let media = "";
@@ -180,7 +179,7 @@ function renderAch() {
           return `<div class="ach-item${item.att ? (item.att.kind === "image" ? " has-img" : " has-file") : ""}">${media}${textPart}<button class="ach-del" data-i="${i}">✕</button></div>`;
         })
         .join("")
-    : '<p class="certs-empty">Әзірге жетістік жоқ.</p>';
+    : '<p class="certs-empty">' + t("ach_empty") + "</p>";
   list.onclick = (e) => {
     const btn = e.target.closest(".ach-del");
     if (btn) {
@@ -206,18 +205,18 @@ let achFile = null; /* таңдалған файлды уақытша сақта
 
 async function addAch() {
   const v = $("#ach-input").value.trim();
-  if (!v && !achFile) return toast("Жетістік жазыңыз немесе файл таңдаңыз");
+  if (!v && !achFile) return toast(t("ach_required"));
   let att = null;
   if (achFile) {
     try {
       if (achFile.type.startsWith("image/")) {
         att = { kind: "image", data: await fileToDataUrl(achFile) };
       } else {
-        if (achFile.size > 2 * 1024 * 1024) return toast("⚠️ Файл 2MB-тан үлкен — кішірейтіп жүктеңіз");
+        if (achFile.size > 2 * 1024 * 1024) return toast(t("file_big"));
         att = { kind: "file", data: await fileToRawDataUrl(achFile), fname: achFile.name };
       }
     } catch {
-      return toast("Файлды оқу мүмкін болмады");
+      return toast(t("file_read_err"));
     }
   }
   T().achievements.unshift({ text: v, att });
@@ -227,17 +226,17 @@ async function addAch() {
   achFile = null;
   const f = $("#ach-file");
   if (f) f.value = "";
-  $("#ach-file-btn").textContent = "📎 Файл таңда";
+  $("#ach-file-btn").textContent = t("btn_choose_file");
   renderStats();
-  toast("✅ Жетістік қосылды");
+  toast(t("ach_added"));
 }
 $("#ach-add").addEventListener("click", addAch);
 $("#ach-input").addEventListener("keydown", (e) => e.key === "Enter" && addAch());
 $("#ach-file").addEventListener("change", (e) => {
   const file = e.target.files[0] || null;
   achFile = file;
-  $("#ach-file-btn").textContent = file ? "✅ " + (file.name.length > 18 ? file.name.slice(0, 18) + "…" : file.name) : "📎 Файл таңда";
-  if (file) toast("📎 Файл таңдалды: " + file.name);
+  $("#ach-file-btn").textContent = file ? "✅ " + (file.name.length > 18 ? file.name.slice(0, 18) + "…" : file.name) : t("btn_choose_file");
+  if (file) toast(t("file_selected") + file.name);
 });
 
 /* ---------- Raspi ---- */
@@ -247,22 +246,22 @@ function schedEntry(shift, period, day) {
 
 function renderSchedule() {
   $("#sched-year").textContent = year;
-  const t = T();
-  const total = t.schedule.length;
+  const tc = T();
+  const total = tc.schedule.length;
 
   /* Top-synyp boiynsha sana */
   const byClass = {};
-  t.schedule.forEach((s) => (byClass[s.cls] = (byClass[s.cls] || 0) + 1));
+  tc.schedule.forEach((s) => (byClass[s.cls] = (byClass[s.cls] || 0) + 1));
   const byClassHtml = Object.entries(byClass)
     .sort((a, b) => a[0].localeCompare(b[0], "kk"))
-    .map(([c, n]) => `<div class="sched-stat"><b>${n}</b><span>${esc(c)} сыныбы</span></div>`)
+    .map(([c, n]) => `<div class="sched-stat"><b>${n}</b><span>${esc(c)} ${t("class_of")}</span></div>`)
     .join("");
 
-  $("#sched-stats").innerHTML = `<div class="sched-stat"><b>${total}</b><span>аптасына сабақ саны</span></div>` + byClassHtml;
+  $("#sched-stats").innerHTML = `<div class="sched-stat"><b>${total}</b><span>${t("lessons_week_label")}</span></div>` + byClassHtml;
 
   ["am", "pm"].forEach((shift) => {
     const grid = $(`#grid-${shift}`);
-    let html = "<tr><th>Сабақ</th><th>Уақыт</th>" + DAYS.map((d) => `<th>${d}</th>`).join("") + "</tr>";
+    let html = "<tr><th>" + t("sched_lesson") + "</th><th>" + t("sched_time") + "</th>" + DAYS.map((d) => `<th>${d}</th>`).join("") + "</tr>";
     PERIODS[shift].forEach((times, pi) => {
       const p = pi + 1;
       html += `<tr><td class="time">${p}</td><td class="time">${times[0]}–${times[1]}</td>`;
@@ -290,13 +289,13 @@ function onCellClick(e) {
   const shift = cell.dataset.shift;
   const period = +cell.dataset.period;
   const day = +cell.dataset.day;
-  const t = T();
-  const i = t.schedule.findIndex((s) => s.shift === shift && s.period === period && s.day === day);
+  const tc = T();
+  const i = tc.schedule.findIndex((s) => s.shift === shift && s.period === period && s.day === day);
   if (i >= 0) {
-    const removed = t.schedule.splice(i, 1)[0];
+    const removed = tc.schedule.splice(i, 1)[0];
     persist();
     renderSchedule();
-    toast(`Жойылды: ${DAYS[day]}, ${removed.cls} (${removed.room} каб.)`);
+    toast(t("sched_removed", DAYS[day], removed.cls, removed.room));
   }
 }
 
@@ -324,13 +323,13 @@ $("#sa-add").addEventListener("click", () => {
   const day = +$("#sa-day").value;
   const cls = $("#sa-cls").value.trim().toUpperCase();
   const room = $("#sa-room").value.trim();
-  if (!cls || !room) return toast("Сынып пен кабинетті жазыңыз");
-  const t = T();
-  if (schedEntry(shift, period, day)) return toast("Бұл кезде сабақ бар — алдымен жойыңыз");
-  t.schedule.push({ day, shift, period, cls, room });
+  if (!cls || !room) return toast(t("sa_fill_req"));
+  const tc = T();
+  if (schedEntry(shift, period, day)) return toast(t("sa_busy"));
+  tc.schedule.push({ day, shift, period, cls, room });
   persist();
   renderSchedule();
-  toast(`✅ Қосылды: ${DAYS[day]}, ${period} сабақ, ${cls}, ${room} каб.`);
+  toast(t("sa_added", DAYS[day], period, cls, room));
 });
 
 /* ---------- Mобильdi meni ---- */
@@ -353,3 +352,6 @@ renderSelects();
 renderAddForm();
 $("#year").textContent = new Date().getFullYear();
 renderAll();
+
+/* Тіл ауықса — динамикалық жолдарды қайта рендер */
+window.addEventListener("langchange", () => renderAll());

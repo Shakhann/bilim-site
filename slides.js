@@ -45,17 +45,17 @@ function renderLessons() {
         .map(
           (l) => `
     <div class="lesson-card">
-      <h3>📽️ ${esc(l.title || "Атауы жоқ сабақ")}</h3>
-      <div class="muted">${l.slides.length} слайд</div>
+      <h3>📽️ ${esc(l.title || t("lesson_no_title"))}</h3>
+      <div class="muted">${t("n_slides", l.slides.length)}</div>
       <div class="lesson-actions">
-        <button class="mini-btn" data-act="open" data-id="${l.id}">✏️ Ашу</button>
-        <a class="mini-btn primary" href="present.html?lesson=${l.id}">▶ Көрсету</a>
+        <button class="mini-btn" data-act="open" data-id="${l.id}">${t("btn_open_edit")}</button>
+        <a class="mini-btn primary" href="present.html?lesson=${l.id}">${t("btn_present_show")}</a>
         <button class="mini-btn danger" data-act="del" data-id="${l.id}">🗑</button>
       </div>
     </div>`
         )
         .join("")
-    : '<p class="muted">Әзірге сабақ жоқ. «Жаңа сабақ» батырмасын басыңыз.</p>';
+    : '<p class="muted">' + t("lessons_empty") + "</p>";
 
   grid.onclick = (e) => {
     const btn = e.target.closest("[data-act]");
@@ -66,11 +66,11 @@ function renderLessons() {
       curSlide = 0;
       showBuilder();
     } else {
-      if (!confirm("Сабақ жойылсын ба?")) return;
+      if (!confirm(t("del_lesson"))) return;
       lessons = lessons.filter((l) => l.id !== id);
       saveLessons();
       renderLessons();
-      toast("Сабақ жойылды");
+      toast(t("lesson_deleted"));
     }
   };
 }
@@ -179,9 +179,9 @@ function renderCanvas() {
   if (s.type === "video") {
     c.innerHTML = videoEmbed(s.url || "") + (s.title ? `<h2 style="margin-top:10px">${esc(s.title)}</h2>` : "");
   } else if (s.type === "quiz") {
-    c.innerHTML = `<div class="game-badge">🎯 Kahoot-тай тест<br><small style="font-weight:600;opacity:0.75">${esc(quiz ? quiz.title : "тест таңдалмаған!")}<br>${quiz ? quiz.questions.length + " сұрақ · " + quiz.time + " сек/сұрақ" : ""}</small></div>`;
+    c.innerHTML = `<div class="game-badge">${t("badge_quiz")}<br><small style="font-weight:600;opacity:0.75">${esc(quiz ? quiz.title : t("badge_quiz_un"))}<br>${quiz ? t("qz_info2", quiz.questions.length, quiz.time) : ""}</small></div>`;
   } else if (s.type === "board") {
-    c.innerHTML = `<div class="game-badge">👥 Топтық ойын<br><small style="font-weight:600;opacity:0.75">${esc(board ? board.topic : "жоспар таңдалмаған!")}<br>${board ? board.groups + " топ · тарақтары: " + (board.branches.join(", ") || "—") : ""}</small></div>`;
+    c.innerHTML = `<div class="game-badge">${t("badge_board")}<br><small style="font-weight:600;opacity:0.75">${esc(board ? board.topic : t("badge_board_un"))}<br>${board ? t("b_short", board.groups, board.branches.join(", ") || "—") : ""}</small></div>`;
   } else {
     c.innerHTML = `<h2>${esc(s.title || "")}</h2><p>${esc(s.text || "")}</p>`;
   }
@@ -191,15 +191,15 @@ function renderProps() {
   const l = lesson();
   const s = l.slides[curSlide];
   const p = $("#props-panel");
-  let html = `<h3>Слайд ${curSlide + 1} · ${thumbIcon(s)} ${
-    { text: "мәтін", video: "видео", quiz: "тест (Kahoot)", board: "топтық ойын" }[s.type]
-  }</h3>
-  <label><span>Слайд түрі</span>
+  let html = `<h3>${t("p_slide", curSlide + 1, thumbIcon(s) + " " +
+    { text: t("st_text"), video: t("st_video"), quiz: t("st_quiz"), board: t("st_board") }[s.type]
+  )}</h3>
+  <label><span>${t("p_type_label")}</span>
     <select id="p-type">
-      <option value="text"${s.type === "text" ? " selected" : ""}>📝 Мәтін</option>
-      <option value="video"${s.type === "video" ? " selected" : ""}>🎬 Видео</option>
-      <option value="quiz"${s.type === "quiz" ? " selected" : ""}>🎯 Тест (Kahoot)</option>
-      <option value="board"${s.type === "board" ? " selected" : ""}>👥 Топтық ойын</option>
+      <option value="text"${s.type === "text" ? " selected" : ""}>${t("opt_text")}</option>
+      <option value="video"${s.type === "video" ? " selected" : ""}>${t("opt_video")}</option>
+      <option value="quiz"${s.type === "quiz" ? " selected" : ""}>${t("opt_quiz")}</option>
+      <option value="board"${s.type === "board" ? " selected" : ""}>${t("opt_board")}</option>
     </select>
   </label>`;
 
@@ -210,22 +210,22 @@ function renderProps() {
   }
   if (s.type === "video") {
     html += `
-    <label><span>Видео сілтемесі (YouTube немесе .mp4)</span><input type="text" id="p-url" value="${esc(s.url || "")}" placeholder="https://youtube.com/watch?v=..." /></label>
+    <label><span>${t("p_video_url")}</span><input type="text" id="p-url" value="${esc(s.url || "")}" placeholder="https://youtube.com/watch?v=..." /></label>
     <label><span>Атауы (бос қалдыруға болады)</span><input type="text" id="p-title" value="${esc(s.title || "")}" /></label>
-    <p class="muted" style="font-size:0.8rem;margin-top:10px">Сілтемені ғана қойыңыз — слайдта сілтеме емес, тікелей видео плейер шығады.</p>`;
+    <p class="muted" style="font-size:0.8rem;margin-top:10px">${t("p_video_url_note")}</p>`;
   }
   if (s.type === "quiz") {
     html += `
-    <label><span>Тест таңдау (ойын банкінен)</span>
+    <label><span>${t("p_quiz_label")}</span>
       <select id="p-quiz">
-        ${quizzes.map((q) => `<option value="${q.id}"${q.id === s.quizId ? " selected" : ""}>${esc(q.title)} (${q.questions.length} сұрақ)</option>`).join("")}
+        ${quizzes.map((q) => `<option value="${q.id}"${q.id === s.quizId ? " selected" : ""}>${esc(q.title)} (${t("q_n", q.questions.length)})</option>`).join("")}
       </select>
     </label>
-    <button class="mini-btn" id="p-edit-quiz" style="margin-top:12px">✏️ Тестті құрастыру (ойындар беті)</button>`;
+    <button class="mini-btn" id="p-edit-quiz" style="margin-top:12px">${t("p_edit_quiz")}</button>`;
   }
   if (s.type === "board") {
     html += `
-    <label><span>Ойын жоспары таңдау</span>
+    <label><span>${t("p_board_label")}</span>
       <select id="p-board">
         ${boards.map((b) => `<option value="${b.id}"${b.id === s.boardId ? " selected" : ""}>${esc(b.title)}</option>`).join("")}
       </select>
@@ -279,7 +279,7 @@ $("#lesson-title").addEventListener("input", (e) => {
 
 function addSlide() {
   const l = lesson();
-  const type = prompt("Слайд түрін таңдаңыз (мәтін / видео / тест / топтық ойын)", "мәтін");
+  const type = prompt(t("st_prompt"), "мәтін");
   const t = type.includes("видео") ? "video" : type.includes("тест") ? "quiz" : type.includes("топтық") ? "board" : "text";
   const s = { id: uid(), type: t, title: "", text: "", bg: "#ffffff", url: "", quizId: quizzes[0]?.id, boardId: boards[0]?.id };
   l.slides.splice(curSlide + 1, 0, s);
@@ -308,21 +308,21 @@ function renderGames() {
           (q) => `
     <div class="qz-card">
       <h3>🎯 ${esc(q.title)}</h3>
-      <div class="qz-meta">${q.questions.length} сұрақ · ${q.time} сек/сұрақ</div>
+      <div class="qz-meta">${t("qz_info2", q.questions.length, q.time)}</div>
       <div class="lesson-actions">
-        <a class="mini-btn primary" href="present.html?quiz=${q.id}" target="_blank">▶️ Ойнату</a>
-        <button class="mini-btn" data-act="edit" data-id="${q.id}">✏️ Ашу</button>
+        <a class="mini-btn primary" href="present.html?quiz=${q.id}" target="_blank">${t("btn_play")}</a>
+        <button class="mini-btn" data-act="edit" data-id="${q.id}">${t("btn_open_edit")}</button>
         <button class="mini-btn danger" data-act="del" data-id="${q.id}">🗑</button>
       </div>
     </div>`
         )
         .join("")
-    : '<p class="muted">Тест жоқ — төменнен құрастырыңыз.</p>';
+    : '<p class="muted">' + t("quizzes_empty") + "</p>";
   $("#quizzes-list").onclick = (e) => {
     const btn = e.target.closest("[data-act]");
     if (!btn) return;
     if (btn.dataset.act === "del") {
-      if (!confirm("Тест жойылсын ба?")) return;
+      if (!confirm(t("del_quiz"))) return;
       quizzes = quizzes.filter((q) => q.id !== btn.dataset.id);
       saveQuizzes();
       renderGames();
@@ -338,26 +338,26 @@ function renderGames() {
           (b) => `
     <div class="qz-card">
       <h3>👥 ${esc(b.title)}</h3>
-      <div class="qz-meta">Тақырып: «${esc(b.topic)}» · ${b.groups} топ${
+      <div class="qz-meta">${t("topic_short", esc(b.topic), b.groups)}${
         b.names && b.names.some((n) => n && n.trim())
           ? " · " + esc(b.names.map((n, i) => (n && n.trim()) || gnameDefault(i)).join(", "))
           : ""
       }</div>
-      <div class="qz-meta">Тарақтары: ${esc(b.branches.join(", ") || "—")}</div>
+      <div class="qz-meta">${t("branches_label")} ${esc(b.branches.join(", ") || "—")}</div>
       <div class="lesson-actions">
-        <a class="mini-btn primary" href="present.html?board=${b.id}" target="_blank">▶️ Ойнату</a>
-        <button class="mini-btn" data-act="edit" data-id="${b.id}">✏️ Ашу</button>
+        <a class="mini-btn primary" href="present.html?board=${b.id}" target="_blank">${t("btn_play")}</a>
+        <button class="mini-btn" data-act="edit" data-id="${b.id}">${t("btn_open_edit")}</button>
         <button class="mini-btn danger" data-act="del" data-id="${b.id}">🗑</button>
       </div>
     </div>`
         )
         .join("")
-    : '<p class="muted">Ойын жоспары жоқ.</p>';
+    : '<p class="muted">' + t("boards_empty") + "</p>";
   $("#boards-list").onclick = (e) => {
     const btn = e.target.closest("[data-act]");
     if (!btn) return;
     if (btn.dataset.act === "del") {
-      if (!confirm("Жоспар жойылсын ба?")) return;
+      if (!confirm(t("del_board"))) return;
       boards = boards.filter((b) => b.id !== btn.dataset.id);
       saveBoards();
       renderGames();
@@ -376,7 +376,7 @@ function blankQuestion() {
 function openQuizEditor(id) {
   editingQuizId = id || null;
   const q = quizzes.find((x) => x.id === id);
-  $("#quiz-editor-title").textContent = q ? "Тестті өзгерту" : "Жаңа тест";
+  $("#quiz-editor-title").textContent = q ? t("qz_edit") : t("qz_new");
   $("#qz-name").value = q ? q.title : "";
   $("#qz-time").value = q ? q.time : 20;
   window.__qzDraft = q ? JSON.parse(JSON.stringify(q.questions)) : [blankQuestion()];
@@ -390,19 +390,19 @@ function renderQuizDraft() {
     .map(
       (qq, i) => `
     <div class="question-block">
-      <div class="q-text">Сұрақ ${i + 1}</div>
-      <input type="text" class="qq" data-i="${i}" value="${esc(qq.q)}" placeholder="Сұрақ" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit" />
+      <div class="q-text">${t("q_label", i + 1)}</div>
+      <input type="text" class="qq" data-i="${i}" value="${esc(qq.q)}" placeholder="${t("q_ph")}" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:8px;font-family:inherit" />
       ${qq.answers
         .map(
           (a, ai) => `
         <div class="ans-row">
           <span class="ans-color" style="background:${QUIZ_COLORS[ai]}"></span>
-          <input type="text" class="qa" data-i="${i}" data-ai="${ai}" value="${esc(a)}" placeholder="Жауап ${ai + 1}" />
-          <button class="ans-correct${qq.correct === ai ? " checked" : ""}" data-correct="${i}-${ai}" title="Дұрыс жауап">${qq.correct === ai ? "✔" : "○"}</button>
+          <input type="text" class="qa" data-i="${i}" data-ai="${ai}" value="${esc(a)}" placeholder="${t("a_ph", ai + 1)}" />
+          <button class="ans-correct${qq.correct === ai ? " checked" : ""}" data-correct="${i}-${ai}" title="${t("correct_title")}">${qq.correct === ai ? "✔" : "○"}</button>
         </div>`
         )
         .join("")}
-      <button class="mini-btn danger" data-qdel="${i}" style="margin-top:10px">🗑 Сұрақты жою</button>
+      <button class="mini-btn danger" data-qdel="${i}" style="margin-top:10px">${t("q_del")}</button>
     </div>`
     )
     .join("");
@@ -437,9 +437,9 @@ $("#qz-save").addEventListener("click", () => {
   const name = $("#qz-name").value.trim();
   const time = Math.max(5, +$("#qz-time").value || 20);
   const d = window.__qzDraft;
-  if (!name) return toast("Тест атауын жазыңыз");
+  if (!name) return toast(t("qz_name_req"));
   if (!d.length || d.some((q) => !q.q.trim() || q.answers.some((a) => !a.trim())))
-    return toast("Барлық сұрақ пен жауаптарды толтырыңыз");
+    return toast(t("fill_all_q"));
   if (editingQuizId) {
     const q = quizzes.find((x) => x.id === editingQuizId);
     q.title = name;
@@ -451,13 +451,13 @@ $("#qz-save").addEventListener("click", () => {
   saveQuizzes();
   editingQuizId = null;
   renderGames();
-  toast("✅ Тест сақталды — енді слайд арасына қосыңыз");
+  toast(t("qz_saved"));
 });
 $("#qz-cancel").addEventListener("click", () => {
   editingQuizId = null;
   window.__qzDraft = [blankQuestion()];
   $("#qz-name").value = "";
-  $("#quiz-editor-title").textContent = "Жаңа тест";
+  $("#quiz-editor-title").textContent = t("qz_new");
   renderQuizDraft();
 });
 
@@ -467,7 +467,7 @@ let editingBoardId = null;
 function openBoardEditor(id) {
   editingBoardId = id || null;
   const b = boards.find((x) => x.id === id);
-  $("#board-editor-title").textContent = b ? "Ойын жоспарын өзгерту" : "Жаңа топтық ойын";
+  $("#board-editor-title").textContent = b ? t("bd_edit") : t("bd_new");
   $("#bd-name").value = b ? b.title : "";
   $("#bd-topic").value = b ? b.topic : "";
   $("#bd-branches").value = b ? b.branches.join(", ") : "";
@@ -487,8 +487,8 @@ function renderGNames(n, names) {
   const box = $("#bd-gnames");
   box.innerHTML = Array.from({ length: n }, (_, i) => `
     <label class="props" style="border:0;padding:0;background:none">
-      <span><span class="gname-dot" style="background:${GROUP_COLORS[i]}"></span>Топ ${i + 1} атауы</span>
-      <input type="text" class="bd-gname" value="${esc(names[i] || "")}" placeholder="${gnameDefault(i)} (бос қалдырсаң — осы атау)" />
+      <span><span class="gname-dot" style="background:${GROUP_COLORS[i]}"></span>${t("gname_label", i + 1)}</span>
+      <input type="text" class="bd-gname" value="${esc(names[i] || "")}" placeholder="${gnameDefault(i)} ${t("gname_ph")}" />
     </label>`).join("");
   box.querySelectorAll(".bd-gname").forEach((inp) => inp.addEventListener("input", updateBoardPreview));
 }
@@ -516,7 +516,7 @@ $("#bd-groups").addEventListener("input", () => {
 $("#bd-save").addEventListener("click", () => {
   const title = $("#bd-name").value.trim();
   const topic = $("#bd-topic").value.trim();
-  if (!title || !topic) return toast("Атау мен тақырыпты жазыңыз");
+  if (!title || !topic) return toast(t("bd_name_req"));
   const data = {
     title,
     topic,
@@ -529,12 +529,12 @@ $("#bd-save").addEventListener("click", () => {
   saveBoards();
   editingBoardId = null;
   renderGames();
-  toast("✅ Ойын жоспары сақталды");
+  toast(t("bd_saved"));
 });
 $("#bd-cancel").addEventListener("click", () => {
   editingBoardId = null;
   $("#bd-name").value = "";
-  $("#board-editor-title").textContent = "Жаңа топтық ойын";
+  $("#board-editor-title").textContent = t("bd_new");
   updateBoardPreview();
 });
 
@@ -542,6 +542,14 @@ $("#bd-cancel").addEventListener("click", () => {
 $("#burger").addEventListener("click", () => {
   $("#burger").classList.toggle("open");
   $("#nav").classList.toggle("open");
+});
+
+/* Тіл ауықса — ашық көріністі қайта рендер */
+window.addEventListener("langchange", () => {
+  const open = ["lessons", "builder", "games"].find((v) => $("#view-" + v).style.display !== "none");
+  if (open === "lessons") renderLessons();
+  if (open === "games") renderGames();
+  if (open === "builder" && lesson()) renderProps();
 });
 
 /* ---------- start ---------- */

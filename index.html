@@ -22,10 +22,10 @@
       </a>
 
       <nav class="nav" id="nav">
-        <a href="#features">Мүмкіндіктер</a>
-        <a href="cabinet.html">Кабинет</a>
-        <a href="slides.html">Сабақ слайдтары</a>
-        <a href="cabinet.html" class="btn btn-primary nav-cta">Мұғалім кабинеті</a>
+        <a href="#features" data-i18n="nav_features">Мүмкіндіктер</a>
+        <a href="cabinet.html" data-i18n="nav_cabinet">Кабинет</a>
+        <a href="slides.html" data-i18n="nav_slides">Сабақ слайдтары</a>
+        <a href="cabinet.html" class="btn btn-primary nav-cta" data-i18n="btn_teacher_cab">Мұғалім кабинеті</a>
       </nav>
 
       <button class="burger" id="burger" aria-label="Мәзір">
@@ -38,28 +38,28 @@
   <section class="hero">
     <div class="container hero-inner">
       <div class="hero-text">
-        <span class="badge">📚 2026/27 оқу жылына қош келдіңіздер!</span>
-        <h1>Мұғалімдер мен оқушыларға арналған <span class="accent">бірыңғай кеңістік</span></h1>
-        <p class="lead">
+        <span class="badge" data-i18n="hero_badge">📚 2026/27 оқу жылына қош келдіңіздер!</span>
+        <h1><span data-i18n="hero_t1">Мұғалімдер мен оқушыларға арналған</span> <span class="accent" data-i18n="hero_t2">бірыңғай кеңістік</span></h1>
+        <p class="lead" data-i18n="hero_lead">
           Мұғалім жұмысын жеңілдететін құралдар: жеке кабинет, сабақ слайдары,
           сыныптағы ойындар — бәрі бір жүйеде. Оқушыларға ыңғайлы, мұғалімдерге ыңғайлы.
         </p>
         <div class="hero-actions">
-          <a href="cabinet.html" class="btn btn-primary">Мұғалім кабинеті</a>
-          <a href="slides.html" class="btn btn-ghost">Сабақ слайдтары</a>
+          <a href="cabinet.html" class="btn btn-primary" data-i18n="btn_teacher_cab">Мұғалім кабинеті</a>
+          <a href="slides.html" class="btn btn-ghost" data-i18n="nav_slides">Сабақ слайдтары</a>
         </div>
         <div class="stats">
-          <div class="stat"><b>450+</b><span>оқушы</span></div>
-          <div class="stat"><b>32</b><span>мұғалім</span></div>
-          <div class="stat"><b>24</b><span>сынып</span></div>
-          <div class="stat"><b>18</b><span>пән</span></div>
+          <div class="stat"><b>450+</b><span data-i18n="stat_students">оқушы</span></div>
+          <div class="stat"><b>32</b><span data-i18n="stat_teachers">мұғалім</span></div>
+          <div class="stat"><b>24</b><span data-i18n="stat_classes">сынып</span></div>
+          <div class="stat"><b>18</b><span data-i18n="stat_subjects">пән</span></div>
         </div>
       </div>
       <div class="hero-card" aria-hidden="true">
         <div class="hero-card-head">
           <span class="dot"></span><span class="dot"></span><span class="dot"></span>
         </div>
-        <div class="hero-line wide">Бүгінгі сабақ кестесі</div>
+        <div class="hero-line wide" data-i18n="hero_card_title">Бүгінгі сабақ кестесі</div>
         <div class="hero-item"><b>09:00</b> Математика · 9-А</div>
         <div class="hero-item"><b>10:00</b> Қазақ тілі · 8-Б</div>
         <div class="hero-item"><b>11:15</b> Физика · 10-А</div>
@@ -73,24 +73,24 @@
   <section class="section section-alt" id="features">
     <div class="container">
       <div class="section-head">
-        <h2>Мұғалім жұмысын жеңілдететін құралдар</h2>
-        <p>Дайындалу, көрсету, оқушылармен байланыс — бәрі бір жүйеде</p>
+        <h2 data-i18n="feat_title">Мұғалім жұмысын жеңілдететін құралдар</h2>
+        <p data-i18n="feat_sub">Дайындалу, көрсету, оқушылармен байланыс — бәрі бір жүйеде</p>
       </div>
       <div class="features-grid">
         <a class="feature-card" href="cabinet.html">
           <span class="feature-icon">🗂️</span>
-          <h3>Жеке кабинет</h3>
-          <p>Сертификаттар, жетістіктер, жыл бойынша сыныптар (мыс. 2026: 6Б, 7В, 9А) және апталық расписание — қай күні, қай уақытта, қай кабинетте.</p>
+          <h3 data-i18n="feat_cab_t">Жеке кабинет</h3>
+          <p data-i18n="feat_cab_p">Сертификаттар, жетістіктер және апталық расписание — қай күні, қай уақытта, қай кабинетте.</p>
         </a>
         <a class="feature-card" href="slides.html">
           <span class="feature-icon">📽️</span>
-          <h3>Сабақ слайдтары</h3>
-          <p>Канва сияқты оңай конструктор: тақырып, мәтін, видео сілтемесі (слайдта сілтеме емес, тікелей видео), алдын ала дайындалған жоспар.</p>
+          <h3 data-i18n="feat_slides_t">Сабақ слайдтары</h3>
+          <p data-i18n="feat_slides_p">Канва сияқты оңай конструктор: тақырып, мәтін, видео (слайдта сілтеме емес, тікелей видео), алдын ала дайындалған жоспар.</p>
         </a>
         <a class="feature-card" href="slides.html?tab=games">
           <span class="feature-icon">🎮</span>
-          <h3>Сыныпта ойын</h3>
-          <p>Kahoot-тай тест және топтық ойындар. Оқушылар QR арқылы кіреді, дұрыс жауап тікелей көрінеді, соңында топ-3 пьедестал.</p>
+          <h3 data-i18n="feat_games_t">Сыныпта ойын</h3>
+          <p data-i18n="feat_games_p">Kahoot-тай тест және топтық ойындар. Оқушылар QR арқылы кіреді, дұрыс жауап тікелей көрінеді, соңында топ-3 пьедестал.</p>
         </a>
       </div>
     </div>
@@ -100,13 +100,14 @@
 
   <footer class="footer">
     <div class="container footer-inner">
-      <span>© <span id="year"></span> Білім мектебі. Барлық құқықтар қорғалған.</span>
-      <span class="muted">Оқушылар мен мұғалімдер бірге жасаған сайт 🤝</span>
+      <span>© <span id="year"></span> Білім мектебі. <span data-i18n="footer_rights">Барлық құқықтар қорғалған.</span></span>
+      <span class="muted" data-i18n="footer_made">Оқушылар мен мұғалімдер бірге жасаған сайт 🤝</span>
     </div>
   </footer>
 
   <script src="data.js"></script>
   <script src="ui.js"></script>
+  <script src="i18n.js"></script>
   <script src="script.js"></script>
 </body>
 </html>

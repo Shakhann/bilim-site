@@ -7,7 +7,7 @@ const group = +params.get("g") || 1;
 const card = $("#card");
 
 if (!mode || !room) {
-  card.innerHTML = `<h1>⚠️ Қате сілтеме</h1><p class="muted">Бұл бет мұғалім көрсеткен QR код арқылы ашылады.</p>`;
+  card.innerHTML = `<h1>${t("bad_url_title")}</h1><p class="muted">${t("bad_url_sub")}</p>`;
   throw new Error("bad url");
 }
 
@@ -16,9 +16,9 @@ function joinScreen(title, sub) {
     <h1>${title}</h1>
     <p class="muted">${sub}</p>
     <div style="text-align:center;margin-top:14px;font-size:1.5rem;font-weight:800;letter-spacing:4px;color:var(--brand)">${esc(room)}</div>
-    <input type="text" id="name" placeholder="Атыңды жаз" maxlength="18" />
-    <button class="btn btn-primary" id="join-btn">Кіру</button>
-    <div class="join-status" id="status">Байланыс орнатылуда...</div>`;
+    <input type="text" id="name" placeholder="${t("j_name_ph")}" maxlength="18" />
+    <button class="btn btn-primary" id="join-btn">${t("j_join_btn")}</button>
+    <div class="join-status" id="status">${t("j_connecting")}</div>`;
   $("#join-btn").addEventListener("click", doJoin);
   $("#name").addEventListener("keydown", (e) => e.key === "Enter" && doJoin());
   setTimeout(() => $("#name").focus(), 300);
@@ -28,26 +28,26 @@ let client = null;
 
 function doJoin() {
   const name = $("#name").value.trim();
-  if (!name) return ($("#status").textContent = "Атыңды жаз!");
+  if (!name) return ($("#status").textContent = t("j_name_req"));
   $("#join-btn").disabled = true;
-  $("#status").textContent = "Мұғалімге қосылуда...";
+  $("#status").textContent = t("j_joining");
 
   client = rtJoin(room, {
     onOpen() {
       client.send({ type: "join", name, g: group });
-      $("#status").textContent = "✅ Қосылдың! Мұғалімнің бастауын күт...";
+      $("#status").textContent = t("j_joined");
     },
     onMessage(d) {
       if (mode === "quiz") onQuizMsg(d);
       else onBoardMsg(d);
     },
     onError(msg) {
-      $("#status").innerHTML = `⚠️ ${esc(msg)}<br><small>Интернет байланысын тексеріп, QR-ды қайта сканерле</small>`;
+      $("#status").innerHTML = `⚠️ ${esc(msg)}<br><small>${t("j_check_net")}</small>`;
       $("#join-btn").disabled = false;
     },
     onClose() {
       const st = $("#status");
-      if (st) st.textContent = "⚠️ Байланыс үзілді (мұғалім ойынды аяқтады)";
+      if (st) st.textContent = t("j_conn_lost");
     },
   });
 }
@@ -64,8 +64,8 @@ function onQuizMsg(d) {
       <div class="quiz-wait">
         <div class="big">🎯</div>
         <h1>${esc(d.title)}</h1>
-        <p class="muted">${d.total} сұрақ · сұраққа ${d.time} секунд</p>
-        <p style="margin-top:18px;font-weight:700;color:var(--brand)">Мұғалім ойынды бастағанда сұрақ пайда болады...</p>
+        <p class="muted">${t("qz_info2", d.total, d.time)}</p>
+        <p style="margin-top:18px;font-weight:700;color:var(--brand)">${t("qz_start_wait")}</p>
       </div>`;
   }
 
@@ -86,7 +86,7 @@ function onQuizMsg(d) {
     const heights = [110, 84, 60];
     const cols = [1, 0, 2];
     card.innerHTML = `
-      <h1 style="text-align:center">🏆 Нәтижелер</h1>
+      <h1 style="text-align:center">🏆 ${t("qz_results")}</h1>
       <div class="podium" style="margin-top:26px">
         ${cols
           .map(
@@ -102,7 +102,7 @@ function onQuizMsg(d) {
           .join("")}
       </div>
       <p style="text-align:center;margin-top:22px;font-weight:800;font-size:1.1rem">
-        ${myRank ? (myRank <= 3 ? `${medals[myRank - 1]} Сіз ${myRank}-орында! Үздіксің! 🎉` : `Сіз ${myRank}-орында. Ұмтыл! 💪`) : `Сіздің жалпы ұпайыңыз: ${qState ? qState.myTotal : 0}`}
+        ${myRank ? (myRank <= 3 ? t("j_rank_win", medals[myRank - 1], myRank) : t("j_rank_other", myRank)) : t("j_total_score", qState ? qState.myTotal : 0)}
       </p>`;
   }
 }
@@ -110,7 +110,7 @@ function onQuizMsg(d) {
 function renderQuestion(q, t0) {
   const shapes = ["▲", "●", "◆", "■"];
   card.innerHTML = `
-    <p class="muted" style="text-align:center">Сұрақ · ${qState ? qState.time : q.time} сек</p>
+    <p class="muted" style="text-align:center">${t("j_q_time", qState ? qState.time : q.time)}</p>
     <div class="quiz-q">${esc(q.q)}</div>
     <div class="quiz-answers">
       ${q.answers
@@ -137,7 +137,7 @@ function renderQuestion(q, t0) {
       b.classList.add("picked");
       $$(".quiz-ans").forEach((x) => x.classList.add("disabled"));
       client.send({ type: "answer", choice: +b.dataset.i });
-      $("#pts").textContent = "⏳ Жауап қабылданды...";
+      $("#pts").textContent = t("j_answered");
       $("#pts").style.color = "var(--muted)";
     })
   );
@@ -153,7 +153,7 @@ function revealAnswers(correct, gained) {
   });
   const pts = $("#pts");
   if (pts) {
-    pts.textContent = gained > 0 ? `✅ Дұрыс! +${gained} ұпай (жалпы: ${qState.myTotal})` : "❌ Қате жауап";
+    pts.textContent = gained > 0 ? t("j_correct_pts", gained, qState.myTotal) : t("j_wrong");
     pts.style.color = gained > 0 ? "var(--green)" : "#be123c";
   }
 }
@@ -174,7 +174,7 @@ function onBoardMsg(d) {
   }
   if (d.type === "start" && bCfg && !bCfg.started) {
     bCfg.started = true;
-    toast("🚀 Ойын басталды!");
+    toast(t("j_started_toast"));
     renderBoard();
   }
 }
@@ -185,20 +185,19 @@ function renderBoard() {
   const waiting = !bCfg.started;
   card.innerHTML = `
     <div class="board-topic" style="color:var(--ink);background:var(--brand-soft);border-radius:14px;padding:14px;text-align:center;font-weight:800">🎯 ${esc(bCfg.topic)}</div>
-    <div class="bgroup-head"><span class="dot" style="background:${GROUP_COLORS[group - 1]}"></span>${esc(gname)} · сенің топтағы ойларың</div>
+    <div class="bgroup-head"><span class="dot" style="background:${GROUP_COLORS[group - 1]}"></span>${t("j_group_head", esc(gname))}</div>
     ${waiting
-      ? '<div class="board-wait">⏳ Мұғалім оқушыларды түгендеп жатыр — ойын басталғанда бірден ой қоса аласың!</div>'
+      ? '<div class="board-wait">' + t("j_board_wait") + "</div>"
       : branches.length
-        ? `<div class="bbranches">✍️ Ой қосатын тақырыптар: ${branches.map((b) => `<span class="bbranch-chip">${esc(b)}</span>`).join("")}</div>`
+        ? `<div class="bbranches">${t("j_topics")}: ${branches.map((b) => `<span class="bbranch-chip">${esc(b)}</span>`).join("")}</div>`
         : ""}
     <div class="bideas" id="bideas"></div>
     <div class="bidea-form" ${waiting ? 'style="display:none"' : ""}>
       <select id="bbranch">
-        <option value="">— тарақ таңба</option>
+        <option value="">${t("j_pick_branch_opt")}</option>
         ${branches.map((b) => `<option value="${esc(b)}">${esc(b)}</option>`).join("")}
       </select>
-      <input type="text" id="btext" placeholder="Өз ойыңды жаз..." maxlength="140" />
-      <button id="badd">➕</button>
+      <input type="text" id="btext" placeholder="${t("j_idea_ph")}" maxlength="140" />      <button id="badd">➕</button>
     </div>`;
   renderBideas();
   if (!waiting) {
@@ -219,7 +218,7 @@ function renderBideas() {
             </div>`
         )
         .join("")
-    : '<p class="muted" style="font-size:0.88rem">Әзірге ой жоқ — бірінші бол!</p>';
+    : '<p class="muted" style="font-size:0.88rem">' + t("j_no_ideas") + "</p>";
 }
 
 function addIdea() {
@@ -228,14 +227,23 @@ function addIdea() {
   if (!text) return;
   client.send({ type: "idea", text, branch: $("#bbranch").value });
   $("#btext").value = "";
-  toast("✅ Ой жіберілді");
+  toast(t("j_idea_sent"));
 }
 
 /* ---------- start ---------- */
 if (mode === "quiz") {
-  joinScreen("🎯 Тестке қосылу", "Мұғалімнің тестіне қатыс");
+  joinScreen(t("j_join_quiz"), t("j_join_quiz_sub"));
 } else if (mode === "board") {
-  joinScreen(`👥 Топтық ойын · ${group}-топ`, "Тақырыпқа өз ойыңды қос");
+  joinScreen(t("j_join_board", group), t("j_join_board_sub"));
 } else {
-  card.innerHTML = `<h1>⚠️ Белгісіз режим</h1><p class="muted">t=quiz немесе t=board болуы керек</p>`;
+  card.innerHTML = `<h1>${t("j_unknown_mode")}</h1><p class="muted">${t("j_unknown_mode_sub")}</p>`;
 }
+
+/* Тіл ауықса — қайта рендер (қосылу экраны / тақта) */
+window.addEventListener("langchange", () => {
+  if (mode === "quiz" && !qState) joinScreen(t("j_join_quiz"), t("j_join_quiz_sub"));
+  else if (mode === "board") {
+    if (bCfg) renderBoard();
+    else joinScreen(t("j_join_board", group), t("j_join_board_sub"));
+  }
+});

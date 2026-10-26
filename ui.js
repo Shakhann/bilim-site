@@ -173,21 +173,70 @@ function joinUrl(type, room, extra = "") {
   return `${base}?t=${type}&room=${room}${extra}`;
 }
 
-/* ---------- Auth chip: barlyq betterdiń shapkasyna ---------- */
+/* ---------- Auth chip: profil + dropdown menu ---------- */
+function buildAuthChip() {
+  const s = store.get("bilim.session", null);
+  const wrap = document.createElement("div");
+  wrap.className = "auth-wrap";
+  const btn = document.createElement("button");
+  btn.type = "button";
+  btn.className = "auth-chip";
+  if (s) {
+    btn.innerHTML = `👤 ${esc(s.name)} <span class="chev">▾</span>`;
+    const menu = document.createElement("div");
+    menu.className = "auth-menu";
+    menu.innerHTML = `
+      <div class="auth-menu-user">
+        <b>${esc(s.name)}</b>
+        ${s.email ? `<small>${esc(s.email)}</small>` : ""}
+        <small>${s.role === "teacher" ? t("rg_teacher") : t("rg_student")}</small>
+      </div>
+      ${
+        s.role === "teacher"
+          ? `<a class="auth-menu-item" href="cabinet.html?teacher=${s.teacherId ?? 0}">🗂️ ${t("menu_cabinet")}</a>`
+          : ""
+      }
+      <a class="auth-menu-item" href="slides.html">📽️ ${t("nav_slides")}</a>
+      <hr class="auth-menu-sep" />
+      <button type="button" class="auth-menu-item" id="am-switch">🔄 ${t("menu_switch")}</button>
+      <button type="button" class="auth-menu-item danger" id="am-logout">🚪 ${t("menu_logout")}</button>`;
+    wrap.append(btn, menu);
+    btn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      wrap.classList.toggle("open");
+    });
+    menu.querySelector("#am-switch").addEventListener("click", () => {
+      try {
+        store.del("bilim.session");
+      } catch {}
+      location.href = "auth.html";
+    });
+    menu.querySelector("#am-logout").addEventListener("click", () => {
+      try {
+        store.del("bilim.session");
+      } catch {}
+      location.href = "index.html";
+    });
+  } else {
+    btn.innerHTML = `🔑 ${t("btn_login")}`;
+    btn.addEventListener("click", () => {
+      location.href = "auth.html";
+    });
+  }
+  return wrap;
+}
+
 function injectAuthChip() {
   const header = document.querySelector(".header-inner");
-  if (!header || header.querySelector(".auth-chip")) return;
-  const s = store.get("bilim.session", null);
-  const a = document.createElement("a");
-  a.className = "auth-chip";
-  if (s) {
-    a.href = "auth.html?out=1";
-    a.title = "Түсу үшін басыңыз";
-    a.innerHTML = `👤 ${esc(s.name)}<span class="auth-out">· Түсу</span>`;
-  } else {
-    a.href = "auth.html";
-    a.textContent = "🔑 Кіру";
-  }
-  header.appendChild(a);
+  if (!header) return;
+  const old = header.querySelector(".auth-wrap");
+  if (old) old.remove();
+  _authWrap = buildAuthChip();
+  header.appendChild(_authWrap);
 }
+let _authWrap = null;
+document.addEventListener("click", (e) => {
+  if (_authWrap && !_authWrap.contains(e.target)) _authWrap.classList.remove("open");
+});
 document.addEventListener("DOMContentLoaded", injectAuthChip);
+window.addEventListener("langchange", injectAuthChip);

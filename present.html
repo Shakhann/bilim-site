@@ -15,8 +15,8 @@
 
   <div class="present-top">
     <span id="p-title">🎓 Сабақ</span>
-    <span style="display:flex;gap:8px">
-      <button class="btn-sm" id="exit-btn">✕ Шығу</button>
+    <span class="present-top-right" style="display:flex;gap:8px;align-items:center">
+      <button class="btn-sm" id="exit-btn" data-i18n="btn_close">✕ Жабу</button>
     </span>
   </div>
 
@@ -25,13 +25,14 @@
   </div>
 
   <div class="present-bottom">
-    <button class="btn-sm" id="prev">← Алдыңғы</button>
+    <button class="btn-sm" id="prev" data-i18n="btn_prev">← Алдыңғы</button>
     <span class="slide-counter" id="counter">1 / 1</span>
-    <button class="btn-sm" id="next">Келесі →</button>
+    <button class="btn-sm" id="next" data-i18n="btn_next">Келесі →</button>
   </div>
 
   <script src="data.js"></script>
   <script src="ui.js"></script>
+  <script src="i18n.js"></script>
   <script src="present.js"></script>
 </body>
 </html>

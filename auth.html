@@ -12,79 +12,80 @@
 </head>
 <body>
   <div class="auth-wrap">
-    <a class="auth-home" href="index.html">← Басты бетке</a>
+    <a class="auth-home" href="index.html" data-i18n="auth_home">← Басты бетке</a>
     <div class="auth-card">
       <div class="auth-logo">🎓</div>
-      <h1 id="auth-title">Кіру</h1>
-      <p class="muted" id="auth-sub">Мұғалімдер мен оқушыларға арналған кеңістік</p>
+      <h1 id="auth-title" data-i18n="auth_title">Кіру</h1>
+      <p class="muted" id="auth-sub" data-i18n="auth_sub">Мұғалімдер мен оқушыларға арналған кеңістік</p>
 
       <!-- Google -->
       <button class="btn google-btn" id="google-btn">
         <svg width="18" height="18" viewBox="0 0 48 48"><path fill="#FFC107" d="M43.6 20.1H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.6-.4-3.9z"/><path fill="#FF3D00" d="M6.3 14.7l6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.9 1.2 8 3l5.7-5.7C34.3 6.1 29.4 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/><path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-8l-6.5 5C9.5 39.6 16.2 44 24 44z"/><path fill="#1976D2" d="M43.6 20.1H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C36.9 39.2 44 34 44 24c0-1.3-.1-2.6-.4-3.9z"/></svg>
-        Google арқылы кіру
+        <span data-i18n="auth_google">Google арқылы кіру</span>
       </button>
 
-      <div class="auth-divider"><span>немесе email арқылы</span></div>
+      <div class="auth-divider"><span data-i18n="auth_or">немесе email арқылы</span></div>
 
       <!-- Табдар -->
       <div class="auth-tabs">
-        <button class="auth-tab active" data-tab="login">Кіру</button>
-        <button class="auth-tab" data-tab="reg">Тіркелу</button>
+        <button class="auth-tab active" data-tab="login" data-i18n="auth_title">Кіру</button>
+        <button class="auth-tab" data-tab="reg" data-i18n="auth_title_reg">Тіркелу</button>
       </div>
 
       <!-- Кіру -->
       <form id="login-form">
-        <label><span>Эл-пошта</span><input type="email" id="li-email" required placeholder="email@me.kz" /></label>
-        <label><span>Пароль</span>
+        <label><span data-i18n="li_email">Эл-пошта</span><input type="email" id="li-email" required placeholder="email@me.kz" /></label>
+        <label><span data-i18n="li_pass">Пароль</span>
           <div class="pass-wrap">
             <input type="password" id="li-pass" required placeholder="••••••" />
             <button type="button" class="pass-toggle" data-target="li-pass" aria-label="Парольді көрсету/жасыру" title="Көрсету / жасыру">👁️</button>
           </div>
         </label>
-        <button type="submit" class="btn btn-primary btn-block">Кіру</button>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="auth_title">Кіру</button>
         <div class="forgot-row">
-          <button type="button" class="forgot-link" id="forgot-toggle">Пароль ұмытылды ма?</button>
+          <button type="button" class="forgot-link" id="forgot-toggle" data-i18n="forgot">Пароль ұмытылды ма?</button>
         </div>
       </form>
 
       <!-- Пароль қалпына келтіру -->
       <form id="reset-form" style="display:none">
-        <p class="reset-note">Email-іңізді жазыңыз — жаңа пароль орнату сілтемесін почтаңызға жібереміз</p>
-        <label><span>Эл-пошта</span><input type="email" id="rs-email" required placeholder="email@me.kz" /></label>
-        <button type="submit" class="btn btn-primary btn-block">Сілтеме жіберу</button>
+        <p class="reset-note" data-i18n="reset_note">Email-іңізді жазыңыз — жаңа пароль орнату сілтемесін почтаңызға жібереміз</p>
+        <label><span data-i18n="li_email">Эл-пошта</span><input type="email" id="rs-email" required placeholder="email@me.kz" /></label>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="reset_send">Сілтеме жіберу</button>
         <div class="forgot-row">
-          <button type="button" class="forgot-link" id="reset-back">← Кіруге оралу</button>
+          <button type="button" class="forgot-link" id="reset-back" data-i18n="reset_back">← Кіруге оралу</button>
         </div>
       </form>
 
       <!-- Тіркелу -->
       <form id="reg-form" style="display:none">
-        <label><span>Аты-жөніңіз</span><input type="text" id="rg-name" required placeholder="Аты-жөні" /></label>
-        <label><span>Эл-пошта</span><input type="email" id="rg-email" required placeholder="email@me.kz" /></label>
+        <label><span data-i18n="rg_name">Аты-жөніңіз</span><input type="text" id="rg-name" required placeholder="Аты-жөні" /></label>
+        <label><span data-i18n="li_email">Эл-пошта</span><input type="email" id="rg-email" required placeholder="email@me.kz" /></label>
         <label><span>Пароль (кемінде 6 таңба)</span>
           <div class="pass-wrap">
             <input type="password" id="rg-pass" required minlength="6" placeholder="••••••" />
             <button type="button" class="pass-toggle" data-target="rg-pass" aria-label="Парольді көрсету/жасыру" title="Көрсету / жасыру">👁️</button>
           </div>
         </label>
-        <label><span>Сіз кімсіз?</span>
+        <label><span data-i18n="rg_role">Сіз кімсіз?</span>
           <select id="rg-role">
-            <option value="teacher">👩‍🏫 Мұғалім</option>
-            <option value="student">🎒 Оқушы</option>
+            <option value="teacher" data-i18n="rg_teacher">👩‍🏫 Мұғалім</option>
+            <option value="student" data-i18n="rg_student">🎒 Оқушы</option>
           </select>
         </label>
-        <label id="rg-subject-l"><span>Пәніңіз</span><input type="text" id="rg-subject" placeholder="Мыс: Математика" /></label>
-        <label id="rg-class-l" style="display:none"><span>Сыныбыңыз</span><input type="text" id="rg-class" placeholder="Мыс: 9А" maxlength="5" /></label>
-        <button type="submit" class="btn btn-primary btn-block">Тіркелу</button>
+        <label id="rg-subject-l"><span data-i18n="rg_subject">Пәніңіз</span><input type="text" id="rg-subject" placeholder="Мыс: Математика" /></label>
+        <label id="rg-class-l" style="display:none"><span data-i18n="rg_class">Сыныбыңыз</span><input type="text" id="rg-class" placeholder="Мыс: 9А" maxlength="5" /></label>
+        <button type="submit" class="btn btn-primary btn-block" data-i18n="auth_title_reg">Тіркелу</button>
       </form>
 
       <div class="auth-msg" id="auth-msg"></div>
-      <a href="index.html" class="auth-guest">Қонақ ретінде қарау →</a>
+      <a href="index.html" class="auth-guest" data-i18n="auth_guest">Қонақ ретінде қарау →</a>
     </div>
   </div>
 
   <script src="data.js"></script>
   <script src="ui.js"></script>
+  <script src="i18n.js"></script>
   <script src="config.js"></script>
   <script src="auth.js"></script>
   <script>
@@ -130,7 +131,7 @@
         $$(".auth-tab").forEach((x) => x.classList.toggle("active", x === t));
         $("#login-form").style.display = t.dataset.tab === "login" ? "" : "none";
         $("#reg-form").style.display = t.dataset.tab === "reg" ? "" : "none";
-        $("#auth-title").textContent = t.dataset.tab === "login" ? "Кіру" : "Тіркелу";
+        $("#auth-title").textContent = t.dataset.tab === "login" ? t("auth_title") : t("auth_title_reg");
         $("#auth-msg").textContent = "";
       })
     );
@@ -199,15 +200,15 @@
     const s = getSession();
     if (s) {
       $("#auth-title").textContent = "Сәлем, " + s.name + "!";
-      $("#auth-sub").textContent = s.role === "teacher" ? "Мұғалім ретінде кіргенсіз" : "Оқушы ретінде кіргенсіз";
+      $("#auth-sub").textContent = s.role === "teacher" ? t("auth_as_teacher") : t("auth_as_student");
       $("#login-form").style.display = "none";
       $("#reg-form").style.display = "none";
       $("#google-btn").style.display = "none";
       $$(".auth-tab").forEach((t) => (t.style.display = "none"));
       const div = $(".auth-divider");
       if (div) div.style.display = "none";
-      msg("Басқа аккаунт керек болса — «Түсу».");
-      $("#google-btn").insertAdjacentHTML("afterend", `<button class="btn btn-ghost btn-block" id="do-logout" style="margin-top:10px">Түсу</button>`);
+      msg(t("auth_switch_note"));
+      $("#google-btn").insertAdjacentHTML("afterend", `<button class="btn btn-ghost btn-block" id="do-logout" style="margin-top:10px">${t("menu_logout")}</button>`);
       $("#do-logout").addEventListener("click", () => {
         logout();
         location.replace("auth.html");

@@ -35,17 +35,18 @@ async function loadFirebase() {
 
 function fbErr(err) {
   const map = {
-    "auth/email-already-in-use": "Бұл email бұрын тіркелген — кіріңіз",
-    "auth/invalid-email": "Email дұрыс емес",
-    "auth/weak-password": "Пароль қысқа — кемінде 6 таңба жазыңыз",
-    "auth/user-not-found": "Мұндай email табылмады",
-    "auth/wrong-password": "Пароль дұрыс емес",
-    "auth/invalid-credential": "Email немесе пароль дұрыс емес",
-    "auth/popup-closed-by-user": "Google терезесі жабылды — қайта басыңыз",
-    "auth/cancelled-popup-request": "Google терезесі жабылды — қайта басыңыз",
-    "auth/popup-blocked": "Браузер терезені тоқтатты — рұқсат беріп қайта басыңыз",
+    "auth/email-already-in-use": "err_email_used",
+    "auth/invalid-email": "err_invalid_email",
+    "auth/weak-password": "err_weak_pw",
+    "auth/user-not-found": "err_no_user",
+    "auth/wrong-password": "err_wrong_pw",
+    "auth/invalid-credential": "err_invalid_cred",
+    "auth/popup-closed-by-user": "err_popup_closed",
+    "auth/cancelled-popup-request": "err_popup_closed",
+    "auth/popup-blocked": "err_popup_blocked",
   };
-  return map[err.code] || err.message || String(err);
+  const k = map[err.code];
+  return k ? t(k) : err.message || String(err);
 }
 
 /* ---------- Профиль (браузердегі деректер) ---------- */
@@ -90,7 +91,7 @@ async function ensureProfile(email, name, provider, prefRole) {
 
 function askRole(name) {
   return new Promise((resolve) => {
-    const answer = prompt(`${name} — сәлем! Сіз кімсіз?\n1 — Мұғалім\n2 — Оқушы\n\n1 немесе 2 жазыңыз`);
+    const answer = prompt(t("ask_role_q", name));
     resolve(answer === "2" ? "student" : "teacher");
   });
 }
@@ -98,7 +99,7 @@ function askRole(name) {
 /* ---------- Тіркелу ---------- */
 async function registerUser({ name, email, pw, role, subject, className }) {
   email = email.trim().toLowerCase();
-  if (!name.trim() || !email || pw.length < 6) throw new Error("Аты, email және кемінде 6 таңбалы пароль жазыңыз");
+  if (!name.trim() || !email || pw.length < 6) throw new Error(t("err_fill_all"));
 
   const fb = await loadFirebase();
   if (fb) {
@@ -109,7 +110,7 @@ async function registerUser({ name, email, pw, role, subject, className }) {
       throw new Error(fbErr(err));
     }
   } else if (getAuthUsers()[email]) {
-    throw new Error("Бұл email бұрын тіркелген — кіріңіз");
+    throw new Error(t("err_email_used"));
   }
 
   /* Жергілікті профиль + (мұғалім болса) кабинет */
@@ -165,16 +166,16 @@ async function loginUser(email, pw) {
       setSession(sessionOf(user));
       return user;
     } catch (err) {
-      if (err.code === "auth/wrong-password") throw new Error("Пароль дұрыс емес");
+      if (err.code === "auth/wrong-password") throw new Error(t("err_wrong_pw"));
       if (err.code !== "auth/user-not-found" && err.code !== "auth/invalid-credential") throw new Error(fbErr(err));
       /* Firebase-те жоқ — ескі жергілікті аккаунт болуы мүмкін, төменге */
     }
   }
   /* Жергілікті хэш (Firebase-сіз немесе ескі аккаунт) */
   const user = getAuthUsers()[email];
-  if (!user || user.provider === "google") throw new Error("Мұндай email табылмады (Google аккаунты болса — «Google» түймесін басыңыз)");
+  if (!user || user.provider === "google") throw new Error(t("err_no_user_google"));
   const h = await hashPassword(pw, user.salt);
-  if (h !== user.hash) throw new Error("Пароль дұрыс емес");
+  if (h !== user.hash) throw new Error(t("err_wrong_pw"));
   setSession(sessionOf(user));
   return user;
 }
@@ -182,7 +183,7 @@ async function loginUser(email, pw) {
 /* ---------- Парольді қалпына келтіру ---------- */
 async function resetPassword(email) {
   const fb = await loadFirebase();
-  if (!fb) throw new Error("Бұл мүмкіндік Google/Firebase қосылған соң ғана іске асады.");
+  if (!fb) throw new Error(t("err_reset_unavail"));
   await fb.authMod.sendPasswordResetEmail(fb.auth, email.trim().toLowerCase());
 }
 
@@ -190,9 +191,7 @@ async function resetPassword(email) {
 async function googleLogin(prefRole) {
   const fb = await loadFirebase();
   if (!fb) {
-    alert(
-      "Google кіру әзірге қосылмаған.\n\nҚосу үшін config.js файлында BILIM_FIREBASE конфигурациясын толтырыңыз (файл ішінде нұсқау бар)."
-    );
+    alert(t("err_google_unavail"));
     return null;
   }
   const cred = await fb.authMod.signInWithPopup(fb.auth, new fb.authMod.GoogleAuthProvider());

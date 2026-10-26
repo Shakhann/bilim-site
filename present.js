@@ -14,24 +14,24 @@ if (!lesson) {
   if (boardId) {
     lesson = {
       id: "game-" + boardId,
-      title: "Топтық ойын",
+      title: t("default_board_title"),
       slides: [{ id: "s1", type: "board", title: "", text: "", bg: "#ffffff", url: "", quizId: null, boardId }],
     };
   } else if (quizId) {
     lesson = {
       id: "game-" + quizId,
-      title: "Тест",
+      title: t("default_quiz_title"),
       slides: [{ id: "s1", type: "quiz", title: "", text: "", bg: "#ffffff", url: "", quizId, boardId: null }],
     };
   }
 }
 
 if (!lesson) {
-  document.body.innerHTML = '<div style="color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:1.2rem">Сабақ табылмады. <a href="slides.html" style="color:#a5b4fc">Слайдтарға оралу →</a></div>';
+  document.body.innerHTML = '<div style="color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:1.2rem">' + t("lesson_not_found") + ' <a href="slides.html" style="color:#a5b4fc">' + t("btn_back_slides") + "</a></div>";
   throw new Error("lesson not found");
 }
 
-$("#p-title").textContent = "🎓 " + (lesson.title || "Сабақ");
+$("#p-title").textContent = "🎓 " + (lesson.title || t("p_lesson_title"));
 let idx = 0;
 let activeHost = null;
 let hostSlideIdx = -1;
@@ -98,7 +98,7 @@ function startQuizHost(s, el) {
   el.style.background = "#1e1b4b";
   el.style.color = "#fff";
   if (!quiz) {
-    el.innerHTML = '<div class="game-wait">⚠️ Бұл слайдқа тест таңдалмаған.<br>slides.html-де слайдты ашып, «Тест таңдау» ретсінен таңдаңыз.</div>';
+    el.innerHTML = '<div class="game-wait">' + t("slide_no_quiz") + "</div>";
     return;
   }
 
@@ -107,19 +107,19 @@ function startQuizHost(s, el) {
   el.innerHTML = `
     <div class="game-host">
       <div class="game-panel">
-        <div style="text-align:center;font-weight:800">Оқушыларға QR көрсетіңіз</div>
+        <div style="text-align:center;font-weight:800">${t("qz_show_qr")}</div>
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=2&data=${encodeURIComponent(url)}" alt="QR" />
         <div class="room-code">${code}</div>
         <div class="muted" style="font-size:0.75rem;text-align:center;word-break:break-all;color:rgba(255,255,255,0.55)">${url}</div>
         <div style="margin-top:12px">
-          <div style="font-size:0.82rem;font-weight:800;color:rgba(255,255,255,0.75)">📋 Оқушыларды түгендеу</div>
+          <div style="font-size:0.82rem;font-weight:800;color:rgba(255,255,255,0.75)">📋 ${t("p_lessons")}</div>
           <div class="player-chips" id="players" style="margin-top:8px"></div>
           <div id="player-count" style="margin-top:8px;font-size:0.85rem;font-weight:700;color:#fde68a"></div>
         </div>
         <div id="host-actions" style="margin-top:14px"></div>
       </div>
       <div class="game-stage" id="stage">
-        <div class="game-wait">🎯 Тест: ${esc(quiz.title)}<br><small>${quiz.questions.length} сұрақ · ${quiz.time} сек/сұрақ</small></div>
+        <div class="game-wait">${t("qz_info", esc(quiz.title), quiz.questions.length, quiz.time)}</div>
       </div>
     </div>`;
 
@@ -151,7 +151,7 @@ function startQuizHost(s, el) {
       }
     },
     onError(msg) {
-      $("#stage").innerHTML = `<div class="game-wait">⚠️ Байланыс қатесі: ${esc(msg)}</div>`;
+      $("#stage").innerHTML = `<div class="game-wait">${t("conn_err")} ${esc(msg)}</div>`;
     },
   });
   activeHost = host;
@@ -160,15 +160,15 @@ function startQuizHost(s, el) {
   const updatePlayers = () => {
     $("#players").innerHTML = players.size
       ? [...players.values()].map((p) => `<span class="player-chip">👤 ${esc(p.name)}</span>`).join("")
-      : '<span class="muted" style="font-size:0.8rem;color:rgba(255,255,255,0.5)">Әлі оқушы жоқ</span>';
+      : '<span class="muted" style="font-size:0.8rem;color:rgba(255,255,255,0.5)">' + t("qz_none") + "</span>";
     const pc = $("#player-count");
-    if (pc) pc.textContent = players.size ? `✅ ${players.size} оқушы дайын — «Ойынды бастау» басыңыз` : "Әлі оқушы жоқ — QR-ды көрсетіңіз";
+    if (pc) pc.textContent = players.size ? t("p_players_ready", players.size) : t("qz_none_show");
     const btn = $("#start-btn");
     if (btn) btn.disabled = phase !== "lobby";
   };
   updatePlayers();
 
-  $("#host-actions").innerHTML = `<button class="host-btn" id="start-btn">🚀 Ойынды бастау</button>`;
+  $("#host-actions").innerHTML = `<button class="host-btn" id="start-btn">${t("p_start")}</button>`;
   $("#start-btn").addEventListener("click", () => startRound());
 
   function renderDist() {
@@ -188,7 +188,7 @@ function startQuizHost(s, el) {
         <div class="track"><div class="fill" data-i="${i}" style="background:${QUIZ_COLORS[i]};width:0%"></div></div>
       </div>`
       )
-      .join("") + `<div style="margin-top:10px;font-size:0.85rem;color:rgba(255,255,255,0.6)">Жауап берді: ${answered} / ${players.size}</div>`;
+      .join("") + `<div style="margin-top:10px;font-size:0.85rem;color:rgba(255,255,255,0.6)">${t("qz_answered", answered, players.size)}</div>`;
     const max = Math.max(1, ...counts);
     $$("#dist .fill").forEach((f) => {
       const c = counts[+f.dataset.i];
@@ -206,7 +206,7 @@ function startQuizHost(s, el) {
       <div class="game-q">${round + 1}/${quiz.questions.length}. ${esc(q.q)}</div>
       <div class="dist-bars" id="dist"></div>
       <div class="timer-big" id="timer">${quiz.time}</div>
-      <div style="margin-top:12px;color:rgba(255,255,255,0.6);font-size:0.85rem">Оқушылардың экранында сұрақ пайда болды</div>
+      <div style="margin-top:12px;color:rgba(255,255,255,0.6);font-size:0.85rem">${t("qz_on_screen")}</div>
     `);
     renderDist();
     let left = quiz.time;
@@ -234,9 +234,9 @@ function startQuizHost(s, el) {
     });
     host.sendAll({ type: "reveal", round, correct: q.correct, gained });
     setStage(`
-      <div class="game-q">Дұрыс жауап: <span style="color:#86efac">${esc(q.answers[q.correct])}</span></div>
+      <div class="game-q">${t("qz_correct_label")} <span style="color:#86efac">${esc(q.answers[q.correct])}</span></div>
       <div class="dist-bars" id="dist"></div>
-      <div style="margin-top:14px;font-size:0.95rem;font-weight:700">Оқушылар жауапты көріп тұр...</div>
+      <div style="margin-top:14px;font-size:0.95rem;font-weight:700">${t("qz_reveal_watch")}</div>
     `);
     renderDist();
     round++;
@@ -260,7 +260,7 @@ function startQuizHost(s, el) {
     const heights = [120, 90, 66];
     const cols = [1, 0, 2];
     setStage(`
-      <div style="text-align:center;font-size:1.5rem;font-weight:800;margin-bottom:20px">🏆 Жеңімпаздар</div>
+      <div style="text-align:center;font-size:1.5rem;font-weight:800;margin-bottom:20px">🏆 ${t("qz_winners")}</div>
       <div class="podium">
         ${cols
           .map(
@@ -269,7 +269,7 @@ function startQuizHost(s, el) {
                 ${
                   top[pos]
                     ? `<div class="p-name">${medals[pos]} ${esc(top[pos].name)}</div>
-                       <div class="p-score">${top[pos].score} ұпай</div>
+                       <div class="p-score">${top[pos].score} ${t("pts_word")}</div>
                        <div class="podium-block" style="height:${heights[pos]}px;background:linear-gradient(180deg,#4f46e5,#312e81)">${medals[pos]}</div>`
                     : ""
                 }
@@ -278,7 +278,7 @@ function startQuizHost(s, el) {
           .join("")}
       </div>
       <div style="text-align:center;margin-top:26px">
-        <button class="host-btn green" id="cont-btn">▶ Сабақты жалғастыру</button>
+        <button class="host-btn green" id="cont-btn">${t("btn_continue_lesson")}</button>
       </div>
     `);
     $("#cont-btn").addEventListener("click", () => show(idx + 1));
@@ -291,7 +291,7 @@ function startBoardHost(s, el) {
   el.style.background = "#0f172a";
   el.style.color = "#fff";
   if (!board) {
-    el.innerHTML = '<div class="game-wait">⚠️ Бұл слайдқа ойын жоспары таңдалмаған.</div>';
+    el.innerHTML = '<div class="game-wait">' + t("slide_no_board") + "</div>";
     return;
   }
 
@@ -301,7 +301,7 @@ function startBoardHost(s, el) {
     <div class="board-host">
       <div class="board-topic-row">
         <div class="board-topic">🎯 ${esc(board.topic)}</div>
-        <div class="board-room"><span>Бөлме коды</span><b>${code}</b></div>
+        <div class="board-room"><span data-i18n="p_room_code">Бөлме коды</span><b>${code}</b></div>
       </div>
       <div class="qr-row" id="bqr"></div>
       <div class="board-groups" id="bgroups"></div>
@@ -309,8 +309,8 @@ function startBoardHost(s, el) {
       <div class="board-bottom">
         <div class="board-status" id="bstatus"></div>
         <div style="display:flex;gap:12px;flex-shrink:0">
-          <button class="host-btn" id="bstart" style="padding:10px 24px;font-size:1.05rem">🚀 Ойынды бастау</button>
-          <button class="host-btn green" id="bfinish" style="display:none;padding:10px 20px;font-size:0.95rem">✅ Аяқтау</button>
+          <button class="host-btn" id="bstart" style="padding:10px 24px;font-size:1.05rem">${t("p_start")}</button>
+          <button class="host-btn green" id="bfinish" style="display:none;padding:10px 20px;font-size:0.95rem">${t("p_finish")}</button>
         </div>
       </div>
     </div>`;
@@ -371,8 +371,8 @@ function startBoardHost(s, el) {
     if (st) {
       const total = host.players.filter((c) => c.player).length;
       st.textContent = started
-        ? `✅ Ойын басталды — ${total} оқушы қатысып жатыр`
-        : `📋 Түгендеу: ${total} оқушы кірді — барлығы дайын болғанда «Ойынды бастау» басыңыз`;
+        ? t("p_status_go", total)
+        : t("p_status_wait", total);
     }
     /* Әр QR астында сол топтың оқушылары */
     $("#bqr").querySelectorAll(".qr-players").forEach((box) => {
@@ -380,7 +380,7 @@ function startBoardHost(s, el) {
       const names = host.players.filter((c) => c.player && c.player.g === g).map((c) => c.player.name);
       box.innerHTML = names.length
         ? names.map((n) => `<span class="player-chip">👤 ${esc(n)}</span>`).join("")
-        : '<span class="qr-empty">әлі кірмеді...</span>';
+        : '<span class="qr-empty">' + t("qr_none_yet") + "</span>";
     });
     renderBgroups(); /* оқушылар өз тобының астында көрсетіледі */
   }
@@ -396,7 +396,7 @@ function startBoardHost(s, el) {
       const players = host.players.filter((c) => c.player && c.player.g === g).map((c) => c.player.name);
       return `
       <div class="board-group">
-        <h4><span class="dot" style="background:${GROUP_COLORS[gi]}"></span>${esc(gname(g))} · ${list.length} ой</h4>
+        <h4><span class="dot" style="background:${GROUP_COLORS[gi]}"></span>${esc(gname(g))} · ${t("g_ideas", list.length)}</h4>
         <div class="board-players${players.length ? "" : " empty"}">
           ${
             players.length
@@ -410,10 +410,10 @@ function startBoardHost(s, el) {
               (i) => `
           <div class="idea-bubble" style="border-left:3px solid ${GROUP_COLORS[gi]}">
             <span class="idea-name">👤 ${esc(i.name)}${i.branch ? ` <em class="idea-branch">${esc(i.branch)}</em>` : ""}:</span> ${esc(i.text)}
-            <button class="idea-del" data-id="${i.id}" title="Жою">✕</button>
+            <button class="idea-del" data-id="${i.id}" title="${t("del_tooltip")}">✕</button>
           </div>`
             )
-            .join("") || '<div style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-top:6px">ой жоқ...</div>'
+            .join("") || '<div style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-top:6px">' + t("g_no_ideas") + "</div>"
         }
       </div>`;
     }).join("");
