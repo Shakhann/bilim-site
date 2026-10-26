@@ -19,10 +19,10 @@
 const params = new URLSearchParams(location.search);
 let teacherId = params.get("teacher") || (store.get("bilim.session", {}).teacherId ?? 0);
 let year = parseInt(params.get("year")) || 2026;
-const teachers = getTeachers();
-if (!teachers.some((t) => String(t.id) === String(teacherId))) teacherId = teachers[0].id;
+let teachers = getTeachers();
+if (!teachers.some((t) => String(t.id) === String(teacherId))) teacherId = teachers.length ? teachers[0].id : 0;
 
-const T = () => teachers.find((t) => String(t.id) === String(teacherId));
+const T = () => teachers.find((t) => String(t.id) === String(teacherId)) || { name: "—", subject: "", exp: "", color: "#4f46e5", certs: [], achievements: [], years: {}, schedule: [] };
 const persist = () => {
   try {
     saveTeachers(teachers);
@@ -53,6 +53,24 @@ function renderStats() {
   $("#stat-ach").textContent = tc.achievements.length;
 }
 
+/* ---------- Cloud sync status ---------- */
+function renderSync() {
+  const el = $("#sync-status");
+  if (!el) return;
+  const s = store.get("bilim.session", null);
+  let html = "";
+  if (s && s.role === "teacher") {
+    const st = (typeof cloudStatus === "function") ? cloudStatus() : { state: "local" };
+    const tm = st.time ? new Date(st.time).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
+    if (st.state === "ok") html = "☁️ " + t("sync_saved", tm);
+    else if (st.state === "pushing") html = "☁️ " + t("sync_on");
+    else if (st.state === "err") html = "⚠️ " + t("sync_err");
+    else html = "💾 " + t("sync_local");
+  }
+  el.innerHTML = html;
+  el.title = t("sync_note", (s && s.email) || "");
+}
+
 function initials2(name) {
   return name.split(" ").map((w) => w[0]).slice(0, 2).join("").toUpperCase();
 }
@@ -79,6 +97,7 @@ $("#burger").addEventListener("click", () => {
 function renderAll() {
   renderProfile();
   renderStats();
+  renderSync();
 }
 
 ensureSeed();
@@ -88,3 +107,17 @@ renderAll();
 
 /* Тіл ауықса — динамикалық жолдарды қайта рендер */
 window.addEventListener("langchange", () => renderAll());
+window.addEventListener("cloudsync", (e) => {
+  if (e.detail && e.detail.state === "ok") {
+    /* Бұлттан жаңа дерек жүктелді — жаңа snapshot + қайта рендер */
+    teachers = getTeachers();
+    const s = store.get("bilim.session", null);
+    if (s && !teachers.some((x) => String(x.id) === String(teacherId))) {
+      const me = teachers.find((x) => x.email && String(x.email).toLowerCase() === String(s.email).toLowerCase());
+      if (me) teacherId = me.id;
+    }
+    renderAll();
+  }
+  renderSync();
+});
+renderSync();

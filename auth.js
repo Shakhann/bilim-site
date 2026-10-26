@@ -27,7 +27,7 @@ async function loadFirebase() {
   if (_firebase) return _firebase;
   const appMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js");
   const authMod = await import("https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js");
-  const app = appMod.initializeApp(window.BILIM_FIREBASE);
+  const app = appMod.getApps().length ? appMod.getApps()[0] : appMod.initializeApp(window.BILIM_FIREBASE);
   const auth = authMod.getAuth(app);
   _firebase = { app, auth, authMod };
   return _firebase;
@@ -59,6 +59,7 @@ function sessionOf(user) {
     teacherId: user.teacherId || null,
     className: user.className || null,
     photo: user.photo || null,
+    uid: user.uid || null,
   };
 }
 
@@ -106,6 +107,7 @@ async function registerUser({ name, email, pw, role, subject, className }) {
     try {
       const cred = await fb.authMod.createUserWithEmailAndPassword(fb.auth, email, pw);
       await fb.authMod.updateProfile(cred.user, { displayName: name.trim() });
+      window.__fbUid = cred.user.uid;
     } catch (err) {
       throw new Error(fbErr(err));
     }
@@ -163,7 +165,12 @@ async function loginUser(email, pw) {
     try {
       const cred = await fb.authMod.signInWithEmailAndPassword(fb.auth, email, pw);
       const user = await ensureProfile(email, cred.user.displayName || email.split("@")[0], "firebase");
+      user.uid = cred.user.uid;
+      const users2 = getAuthUsers();
+      users2[email].uid = cred.user.uid;
+      store.set(USERS_KEY, users2);
       setSession(sessionOf(user));
+      await cloudSyncOnLogin();
       return user;
     } catch (err) {
       if (err.code === "auth/wrong-password") throw new Error(t("err_wrong_pw"));
@@ -199,10 +206,12 @@ async function googleLogin(prefRole) {
   const name = cred.user.displayName || email.split("@")[0];
   const user = await ensureProfile(email, name, "google", prefRole);
   user.photo = cred.user.photoURL || user.photo || null;
+  user.uid = cred.user.uid;
   const users = getAuthUsers();
   users[email] = user;
   store.set(USERS_KEY, users);
   setSession(sessionOf(user));
+  await cloudSyncOnLogin();
   return user;
 }
 

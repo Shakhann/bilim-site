@@ -41,6 +41,7 @@ const SLIDE_BGS = ["#eef0ff", "#f0fdf4", "#fff7ed", "#fdf2f8", "#ecfeff", "#ffff
   },
   set(key, val) {
     localStorage.setItem(key, JSON.stringify(val));
+    if (typeof window.cloudChanged === "function") window.cloudChanged(key);
   },
   del(key) {
     localStorage.removeItem(key);
