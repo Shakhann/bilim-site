@@ -387,6 +387,9 @@ function startBoardHost(s, el) {
         ? t("p_status_go", total)
         : t("p_status_wait", total);
     }
+    /* Ойын басталған соң QR қатары жасырылады — бос орын топтардың ойларына */
+    const qrRow = $("#bqr");
+    if (qrRow) qrRow.style.display = started ? "none" : "";
     /* Әр QR астында сол топтың оқушылары */
     $("#bqr").querySelectorAll(".qr-players").forEach((box) => {
       const g = +box.dataset.g;
@@ -426,7 +429,7 @@ function startBoardHost(s, el) {
             <button class="idea-del" data-id="${i.id}" title="${t("del_tooltip")}">✕</button>
           </div>`
             )
-            .join("") || '<div style="color:rgba(255,255,255,0.4);font-size:0.8rem;margin-top:6px">' + t("g_no_ideas") + "</div>"
+            .join("") || '<div style="color:rgba(255,255,255,0.4);font-size:1.05rem;margin-top:8px">' + t("g_no_ideas") + "</div>"
         }
       </div>`;
     }).join("");
