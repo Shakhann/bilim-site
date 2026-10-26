@@ -225,26 +225,43 @@ function startQuizHost(s, el) {
     phase = "reveal";
     const q = quiz.questions[round];
     const gained = {};
+    const gList = [];
     players.forEach((p, conn) => {
       const a = p.answers[round];
       let pts = 0;
       if (a && a.choice === q.correct) pts = Math.round(500 + 500 * Math.max(0, 1 - a.dt / (quiz.time * 1000)));
       p.total += pts;
       gained[conn.peer] = pts;
+      gList.push({ name: p.name, pts, total: p.total, answered: !!a });
     });
+    gList.sort((x, y) => y.pts - x.pts || y.total - x.total);
     host.sendAll({ type: "reveal", round, correct: q.correct, gained });
+    const ptsRows = gList
+      .map(
+        (p) => `<div class="round-pts-item${p.pts ? " got" : ""}">
+            <span class="rpi-name">👤 ${esc(p.name)}</span>
+            <span class="rpi-pts">${p.pts ? "+" + p.pts : p.answered ? "0" : "—"}</span>
+            <span class="rpi-total">${t("qz_total_short", p.total)}</span>
+          </div>`
+      )
+      .join("");
     setStage(`
       <div class="game-q">${t("qz_correct_label")} <span style="color:#86efac">${esc(q.answers[q.correct])}</span></div>
       <div class="dist-bars" id="dist"></div>
+      ${
+        ptsRows
+          ? `<div class="round-pts"><div class="round-pts-title">${t("qz_round_pts")}</div><div class="round-pts-grid">${ptsRows}</div></div>`
+          : ""
+      }
       <div style="margin-top:14px;font-size:0.95rem;font-weight:700">${t("qz_reveal_watch")}</div>
     `);
     renderDist();
     round++;
     if (round < quiz.questions.length) {
-      const next = setTimeout(() => phase !== "done" && startRound(), 3500);
+      const next = setTimeout(() => phase !== "done" && startRound(), 8000);
       hostTimers.push(next);
     } else {
-      const fin = setTimeout(finishQuiz, 3500);
+      const fin = setTimeout(finishQuiz, 8000);
       hostTimers.push(fin);
     }
   }
