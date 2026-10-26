@@ -111,8 +111,12 @@ function startQuizHost(s, el) {
         <img src="https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=2&data=${encodeURIComponent(url)}" alt="QR" />
         <div class="room-code">${code}</div>
         <div class="muted" style="font-size:0.75rem;text-align:center;word-break:break-all;color:rgba(255,255,255,0.55)">${url}</div>
-        <div class="player-chips" id="players"></div>
-        <div id="host-actions"></div>
+        <div style="margin-top:12px">
+          <div style="font-size:0.82rem;font-weight:800;color:rgba(255,255,255,0.75)">📋 Оқушыларды түгендеу</div>
+          <div class="player-chips" id="players" style="margin-top:8px"></div>
+          <div id="player-count" style="margin-top:8px;font-size:0.85rem;font-weight:700;color:#fde68a"></div>
+        </div>
+        <div id="host-actions" style="margin-top:14px"></div>
       </div>
       <div class="game-stage" id="stage">
         <div class="game-wait">🎯 Тест: ${esc(quiz.title)}<br><small>${quiz.questions.length} сұрақ · ${quiz.time} сек/сұрақ</small></div>
@@ -157,6 +161,8 @@ function startQuizHost(s, el) {
     $("#players").innerHTML = players.size
       ? [...players.values()].map((p) => `<span class="player-chip">👤 ${esc(p.name)}</span>`).join("")
       : '<span class="muted" style="font-size:0.8rem;color:rgba(255,255,255,0.5)">Әлі оқушы жоқ</span>';
+    const pc = $("#player-count");
+    if (pc) pc.textContent = players.size ? `✅ ${players.size} оқушы дайын — «Ойынды бастау» басыңыз` : "Әлі оқушы жоқ — QR-ды көрсетіңіз";
     const btn = $("#start-btn");
     if (btn) btn.disabled = phase !== "lobby";
   };
@@ -297,8 +303,10 @@ function startBoardHost(s, el) {
       <div class="qr-row" id="bqr"></div>
       <div class="board-groups" id="bgroups"></div>
       <div class="board-err" id="berr"></div>
+      <div class="board-status" id="bstatus"></div>
       <div style="display:flex;align-items:center;gap:12px">
-        <button class="host-btn green" id="bfinish" style="margin-left:auto;padding:10px 20px;font-size:0.9rem">✅ Аяқтау</button>
+        <button class="host-btn" id="bstart" style="padding:10px 22px;font-size:1rem">🚀 Ойынды бастау</button>
+        <button class="host-btn green" id="bfinish" style="display:none;margin-left:auto;padding:10px 20px;font-size:0.9rem">✅ Аяқтау</button>
       </div>
     </div>`;
 
@@ -317,6 +325,7 @@ function startBoardHost(s, el) {
     </div>`;
 
   let ideas = [];
+  let started = false;
   const host = rtHost(code, {
     onConnect(conn) {},
     onDisconnect(conn) {
@@ -332,11 +341,12 @@ function startBoardHost(s, el) {
           branches: board.branches,
           groups: board.groups,
           names: board.names,
+          started,
           ideas: ideas.filter((i) => i.g === conn.player.g),
         });
         updateBplayers();
       }
-      if (d.type === "idea" && conn.player) {
+      if (d.type === "idea" && conn.player && started) {
         const idea = { id: uid(), g: conn.player.g, name: conn.player.name, text: String(d.text || "").slice(0, 140), branch: d.branch || "" };
         ideas.push(idea);
         broadcastGroup(conn.player.g);
@@ -355,6 +365,13 @@ function startBoardHost(s, el) {
   }
 
   function updateBplayers() {
+    const st = $("#bstatus");
+    if (st) {
+      const total = host.players.filter((c) => c.player).length;
+      st.textContent = started
+        ? `✅ Ойын басталды — ${total} оқушы қатысып жатыр`
+        : `📋 Түгендеу: ${total} оқушы кірді — барлығы дайын болғанда «Ойынды бастау» басыңыз`;
+    }
     renderBgroups(); /* оқушылар өз тобының астында көрсетіледі */
   }
 
@@ -398,8 +415,15 @@ function startBoardHost(s, el) {
       renderBgroups();
     };
   }
-  renderBgroups();
+  updateBplayers();
 
+  $("#bstart").addEventListener("click", () => {
+    started = true;
+    host.sendAll({ type: "start" });
+    $("#bstart").style.display = "none";
+    $("#bfinish").style.display = "";
+    updateBplayers();
+  });
   $("#bfinish").addEventListener("click", () => show(idx + 1));
 }
 

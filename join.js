@@ -164,7 +164,7 @@ let bIdeas = [];
 
 function onBoardMsg(d) {
   if (d.type === "cfg") {
-    bCfg = { topic: d.topic, branches: d.branches, groups: d.groups, names: d.names };
+    bCfg = { topic: d.topic, branches: d.branches, groups: d.groups, names: d.names, started: !!d.started };
     bIdeas = d.ideas || [];
     renderBoard();
   }
@@ -172,16 +172,23 @@ function onBoardMsg(d) {
     bIdeas = d.ideas || [];
     renderBoard();
   }
+  if (d.type === "start" && bCfg && !bCfg.started) {
+    bCfg.started = true;
+    toast("🚀 Ойын басталды!");
+    renderBoard();
+  }
 }
 
 function renderBoard() {
   const branches = bCfg.branches || [];
   const gname = (bCfg.names && String(bCfg.names[group - 1] || "").trim()) || (group + "-топ");
+  const waiting = !bCfg.started;
   card.innerHTML = `
     <div class="board-topic" style="color:var(--ink);background:var(--brand-soft);border-radius:14px;padding:14px;text-align:center;font-weight:800">🎯 ${esc(bCfg.topic)}</div>
     <div class="bgroup-head"><span class="dot" style="background:${GROUP_COLORS[group - 1]}"></span>${esc(gname)} · сенің топтағы ойларың</div>
+    ${waiting ? '<div class="board-wait">⏳ Мұғалім оқушыларды түгендеп жатыр — ойын басталғанда бірден ой қоса аласың!</div>' : ""}
     <div class="bideas" id="bideas"></div>
-    <div class="bidea-form">
+    <div class="bidea-form" ${waiting ? 'style="display:none"' : ""}>
       <select id="bbranch">
         <option value="">— тарақ таңба</option>
         ${branches.map((b) => `<option value="${esc(b)}">${esc(b)}</option>`).join("")}
@@ -190,8 +197,10 @@ function renderBoard() {
       <button id="badd">➕</button>
     </div>`;
   renderBideas();
-  $("#badd").addEventListener("click", addIdea);
-  $("#btext").addEventListener("keydown", (e) => e.key === "Enter" && addIdea());
+  if (!waiting) {
+    $("#badd").addEventListener("click", addIdea);
+    $("#btext").addEventListener("keydown", (e) => e.key === "Enter" && addIdea());
+  }
 }
 
 function renderBideas() {
@@ -211,6 +220,7 @@ function renderBideas() {
 }
 
 function addIdea() {
+  if (!bCfg || !bCfg.started) return;
   const text = $("#btext").value.trim();
   if (!text) return;
   client.send({ type: "idea", text, branch: $("#bbranch").value });
