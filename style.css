@@ -785,11 +785,6 @@ body > .auth-wrap {
   margin-top: -14px; position: relative; z-index: 2; padding-bottom: 44px;
 }
 .cab-side { position: sticky; top: 86px; display: flex; flex-direction: column; gap: 20px; }
-.side-cta {
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; color: var(--brand); text-decoration: none; font-size: 0.95rem;
-}
-.side-cta:hover { background: var(--brand-soft); color: var(--brand-2); }
 .panel-head { margin-bottom: 14px; }
 .panel-head h2 { margin-bottom: 2px; }
 .panel-head .sub { margin: 0; }

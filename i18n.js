@@ -144,7 +144,6 @@ const I18N = {
     sa_cls_ph: "мыс: 6Б",
     sa_room: "Кабинет",
     sa_room_ph: "мыс: 204",
-    side_cta: "📽️ Сабақ слайдтарына өту →",
     /* Кіру беті */
     auth_home: "← Басты бетке",
     auth_title: "Кіру",
@@ -485,7 +484,6 @@ const I18N = {
     sa_cls_ph: "напр: 6Б",
     sa_room: "Кабинет",
     sa_room_ph: "напр: 204",
-    side_cta: "📽️ Перейти к слайдам уроков →",
     auth_home: "← На главную",
     auth_title: "Войти",
     auth_title_reg: "Регистрация",
@@ -821,7 +819,6 @@ const I18N = {
     sa_cls_ph: "e.g.: 6B",
     sa_room: "Room",
     sa_room_ph: "e.g.: 204",
-    side_cta: "📽️ Go to lesson slides →",
     auth_home: "← Home",
     auth_title: "Log in",
     auth_title_reg: "Sign up",
