@@ -306,6 +306,7 @@ function startBoardHost(s, el) {
       <div class="qr-row" id="bqr"></div>
       <div class="board-groups" id="bgroups"></div>
       <div class="board-err" id="berr"></div>
+      <div class="board-evlog" id="bevlog"></div>
       <div class="board-bottom">
         <div class="board-status" id="bstatus"></div>
         <div style="display:flex;gap:12px;flex-shrink:0">
@@ -328,15 +329,25 @@ function startBoardHost(s, el) {
 
   let ideas = [];
   let started = false;
+  const evLog = [];
+  function logEv(msg) {
+    const tm = new Date().toLocaleTimeString("ru-RU", { hour12: false });
+    evLog.push(`<span class="evlog-tm">${tm}</span> ${msg}`);
+    if (evLog.length > 5) evLog.shift();
+    const el = $("#bevlog");
+    if (el) el.innerHTML = evLog.map((m) => "<div>" + m + "</div>").join("");
+  }
   const host = rtHost(code, {
     onConnect(conn) {},
     onDisconnect(conn) {
+      if (conn.player) logEv("👋 " + esc(conn.player.name) + " — шықты");
       conn.player = null;
       updateBplayers();
     },
     onMessage(d, conn) {
       if (d.type === "join") {
         conn.player = { name: String(d.name || t("student_default")).slice(0, 18), g: Math.min(board.groups, Math.max(1, +d.g || 1)) };
+        logEv("👤 " + esc(conn.player.name) + " → " + esc(gname(conn.player.g)));
         host.sendTo(conn, {
           type: "cfg",
           topic: board.topic,
@@ -351,12 +362,14 @@ function startBoardHost(s, el) {
       if (d.type === "idea" && conn.player && started) {
         const idea = { id: uid(), g: conn.player.g, name: conn.player.name, text: String(d.text || "").slice(0, 140), branch: d.branch || "" };
         ideas.push(idea);
+        logEv("💬 " + esc(idea.name) + ": " + esc(idea.text.slice(0, 50)));
         broadcastGroup(conn.player.g);
         renderBgroups();
       }
     },
     onError(msg) {
       $("#berr").textContent = "⚠️ " + msg;
+      logEv("⚠️ " + esc(msg));
     },
   });
   activeHost = host;
