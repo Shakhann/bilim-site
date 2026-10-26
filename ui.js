@@ -194,9 +194,10 @@ function buildAuthChip() {
       ${
         s.role === "teacher"
           ? `<a class="auth-menu-item" href="cabinet.html?teacher=${s.teacherId ?? 0}">🗂️ ${t("menu_cabinet")}</a>
-      <a class="auth-menu-item" href="cabinet.html?teacher=${s.teacherId ?? 0}#sched-section">🗓️ ${t("menu_sched")}</a>
-      <a class="auth-menu-item" href="cabinet.html?teacher=${s.teacherId ?? 0}#ach-section">🏆 ${t("menu_ach")}</a>
-      <a class="auth-menu-item" href="cabinet.html?teacher=${s.teacherId ?? 0}#certs-section">📜 ${t("menu_certs")}</a>`
+      <a class="auth-menu-item" href="schedule.html?teacher=${s.teacherId ?? 0}#add-form">➕ ${t("menu_add_lesson")}</a>
+      <a class="auth-menu-item" href="schedule.html?teacher=${s.teacherId ?? 0}">🗓️ ${t("menu_sched")}</a>
+      <a class="auth-menu-item" href="achievements.html?teacher=${s.teacherId ?? 0}">🏆 ${t("menu_ach")}</a>
+      <a class="auth-menu-item" href="certificates.html?teacher=${s.teacherId ?? 0}">📜 ${t("menu_certs")}</a>`
           : ""
       }
       <a class="auth-menu-item" href="slides.html">📽️ ${t("nav_slides")}</a>

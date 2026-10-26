@@ -26,6 +26,8 @@ body {
 }
 
 .container { max-width: 1120px; margin: 0 auto; padding: 0 20px; }
+.pg-narrow { max-width: 760px; padding-top: 30px; padding-bottom: 10px; }
+.pg-narrow .panel { margin-bottom: 30px; }
 .muted { color: var(--muted); }
 .accent {
   background: linear-gradient(90deg, var(--brand), var(--brand-2));
@@ -779,6 +781,12 @@ body > .auth-wrap {
 }
 .hstat b { display: block; font-size: 1.7rem; font-weight: 800; line-height: 1.1; }
 .hstat span { font-size: 0.78rem; color: rgba(255,255,255,0.72); font-weight: 600; }
+.hstat-link { display: block; text-decoration: none; transition: transform .15s, background .15s; }
+.hstat-link b, .hstat-link span { color: #fff; }
+.hstat-link span { color: rgba(255,255,255,0.72); }
+.hstat-link:hover { transform: translateY(-2px); background: rgba(255,255,255,0.2); }
+.pg-yearbar { margin-top: 14px; display: flex; align-items: center; gap: 10px; justify-content: center; font-weight: 600; color: var(--muted); }
+#add-form { scroll-margin-top: 86px; }
 
 .cab-layout {
   display: grid; grid-template-columns: 330px 1fr; gap: 22px; align-items: start;

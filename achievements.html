@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="title_ach">Жетістіктер — Білім</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">🎓</span>
+        <span class="logo-text">Білім<span class="logo-accent">мектеп</span></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="index.html" data-i18n="nav_home">Басты бет</a>
+        <a href="cabinet.html" class="nav-cta" data-i18n="nav_cabinet">Кабинет</a>
+        <a href="slides.html" data-i18n="nav_slides">Сабақ слайдтары</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Мәзір"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="container pg-narrow">
+    <div class="panel" id="ach-section">
+      <h2 data-i18n="ach_title">🏆 Жетістіктер</h2>
+      <p class="sub" data-i18n="ach_sub">Мәтін + файл (диплом, сурет, PDF) сала аласыз</p>
+      <div class="ach-list" id="ach-list"></div>
+      <div class="ach-add">
+        <input type="text" id="ach-input" data-i18n-ph="ach_ph" placeholder="Мыс: Өңірлік олимпиада жеңімпазы" />
+        <label class="file-btn" for="ach-file" id="ach-file-btn" data-i18n="btn_choose_file">📎 Файл таңда</label>
+        <input type="file" id="ach-file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" hidden />
+        <button class="btn btn-primary" id="ach-add" style="padding:10px 18px">＋</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Білім мектебі. <span data-i18n="footer_rights">Барлық құқықтар қорғалған.</span></span>
+      <span class="muted" data-i18n="footer_cab">Мұғалім жұмысын жеңілдету — басты мақсат 🤝</span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="ui.js"></script>
+  <script src="i18n.js"></script>
+  <script src="achievements.js"></script>
+</body>
+</html>

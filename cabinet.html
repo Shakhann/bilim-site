@@ -51,84 +51,13 @@
       </div>
     </div>
     <div class="container cab-hero-stats">
-      <div class="hstat"><b id="stat-lessons">–</b><span data-i18n="stat_lessons">аптасына сабақ</span></div>
-      <div class="hstat"><b id="stat-classes">–</b><span data-i18n="stat_sched_classes">расписаниедегі сынып</span></div>
-      <div class="hstat"><b id="stat-certs">–</b><span data-i18n="stat_certs">сертификат</span></div>
-      <div class="hstat"><b id="stat-ach">–</b><span data-i18n="stat_ach">жетістік</span></div>
+      <a class="hstat hstat-link" href="schedule.html"><b id="stat-lessons">–</b><span data-i18n="stat_lessons">аптасына сабақ</span></a>
+      <a class="hstat hstat-link" href="schedule.html"><b id="stat-classes">–</b><span data-i18n="stat_sched_classes">расписаниедегі сынып</span></a>
+      <a class="hstat hstat-link" href="certificates.html"><b id="stat-certs">–</b><span data-i18n="stat_certs">сертификат</span></a>
+      <a class="hstat hstat-link" href="achievements.html"><b id="stat-ach">–</b><span data-i18n="stat_ach">жетістік</span></a>
     </div>
   </section>
 
-  <main class="container cab-layout">
-
-    <!-- Сол жақ бағана -->
-    <aside class="cab-side">
-      <div class="panel" id="ach-section">
-        <h2 data-i18n="ach_title">🏆 Жетістіктер</h2>
-        <p class="sub" data-i18n="ach_sub">Мәтін + файл (диплом, сурет, PDF) сала аласыз</p>
-        <div class="ach-list" id="ach-list"></div>
-        <div class="ach-add">
-          <input type="text" id="ach-input" data-i18n-ph="ach_ph" placeholder="Мыс: Өңірлік олимпиада жеңімпазы" />
-          <label class="file-btn" for="ach-file" id="ach-file-btn" data-i18n="btn_choose_file">📎 Файл таңда</label>
-          <input type="file" id="ach-file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" hidden />
-          <button class="btn btn-primary" id="ach-add" style="padding:10px 18px">＋</button>
-        </div>
-      </div>
-
-    </aside>
-
-    <!-- Оң жақ бағана -->
-    <div class="cab-main">
-
-      <!-- Сертификаттар -->
-      <div class="panel" id="certs-section">
-        <div class="panel-head">
-          <h2 data-i18n="certs_title">📜 Сертификаттар</h2>
-          <p class="sub" data-i18n="certs_sub">Оқыту, тренинг және конкурстар туралы құжаттар</p>
-        </div>
-        <div class="certs-grid" id="certs-grid"></div>
-        <div class="certs-add">
-          <input type="text" id="cert-name" data-i18n-ph="certs_ph" placeholder="Сертификат аты (мыс: «Цифрлық сауаттылық», 2026)" />
-          <label class="file-btn" for="cert-file" data-i18n="btn_choose_file">📎 Файл таңда</label>
-          <input type="file" id="cert-file" accept="image/*,.pdf,.doc,.docx,.ppt,.pptx,.xls,.xlsx" />
-          <button class="btn btn-primary" id="cert-add" style="padding:10px 20px" data-i18n="btn_add">Қосу</button>
-        </div>
-      </div>
-
-    </div>
-  </main>
-
-  <!-- Расписание — толық енімен, ортада -->
-  <div class="cab-sched-wrap">
-    <div class="panel" id="sched-section">
-      <div class="panel-head">
-        <h2><span data-i18n="sched_title">🗓️ Апталық расписание</span> — <span id="sched-year" style="color:var(--brand)"></span> <span data-i18n="sched_year">жыл</span></h2>
-        <p class="sub" data-i18n="sched_sub">Қай күні, қай уақытта, қай кабинетке. 1 сабақ — 45 минут, үзіліс — 5 минут. Тордың көзеге басу — жазбаны жою.</p>
-      </div>
-
-      <div class="sched-stats" id="sched-stats"></div>
-
-      <div class="shift-title" data-i18n="shift_am">🌅 Таңертеңгі ауысым</div>
-      <div class="sched-scroll"><table class="sched-grid" id="grid-am"></table></div>
-
-      <div class="shift-title" data-i18n="shift_pm">🌇 Түстен кейінгі ауысым</div>
-      <div class="sched-scroll"><table class="sched-grid" id="grid-pm"></table></div>
-
-      <div class="shift-title" style="margin-top:26px" data-i18n="sched_add_title">➕ Сабақ қосу</div>
-      <div class="sched-add" id="sched-add">
-        <label><span data-i18n="sa_day">Күн</span> <select id="sa-day"></select></label>
-        <label><span data-i18n="sa_shift">Ауысым</span>
-          <select id="sa-shift">
-            <option value="am" data-i18n="sa_shift_am">Таңертеңгі</option>
-            <option value="pm" data-i18n="sa_shift_pm">Түстен кейін</option>
-          </select>
-        </label>
-        <label><span data-i18n="sa_period">Сабақ</span> <select id="sa-period"></select></label>
-        <label><span data-i18n="sa_cls">Сынып</span> <input type="text" id="sa-cls" data-i18n-ph="sa_cls_ph" placeholder="мыс: 6Б" maxlength="6" /></label>
-        <label><span data-i18n="sa_room">Кабинет</span> <input type="text" id="sa-room" data-i18n-ph="sa_room_ph" placeholder="мыс: 204" maxlength="8" /></label>
-        <label><span></span><button class="btn btn-primary" id="sa-add" data-i18n="btn_add">Қосу</button></label>
-      </div>
-    </div>
-  </div>
 
   <footer class="footer">
     <div class="container footer-inner">

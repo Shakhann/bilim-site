@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title data-i18n="title_schedule">Расписание — Білім</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🎓</text></svg>" />
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo">
+        <span class="logo-mark">🎓</span>
+        <span class="logo-text">Білім<span class="logo-accent">мектеп</span></span>
+      </a>
+      <nav class="nav" id="nav">
+        <a href="index.html" data-i18n="nav_home">Басты бет</a>
+        <a href="cabinet.html" class="nav-cta" data-i18n="nav_cabinet">Кабинет</a>
+        <a href="slides.html" data-i18n="nav_slides">Сабақ слайдтары</a>
+      </nav>
+      <button class="burger" id="burger" aria-label="Мәзір"><span></span><span></span><span></span></button>
+    </div>
+  </header>
+
+  <main class="cab-sched-wrap" style="margin-top:26px">
+    <div class="panel">
+      <div class="panel-head">
+        <h2><span data-i18n="sched_title">🗓️ Апталық расписание</span> — <span id="sched-year" style="color:var(--brand)"></span> <span data-i18n="sched_year">жыл</span></h2>
+        <p class="sub" data-i18n="sched_sub">Қай күні, қай уақытта, қай кабинетке. 1 сабақ — 45 минут, үзіліс — 5 минут. Тордың көзеге басу — жазбаны жою.</p>
+        <div class="pg-yearbar">
+          <span data-i18n="cab_year">Оқу жылы</span>
+          <select id="year-select"></select>
+        </div>
+      </div>
+
+      <div class="sched-stats" id="sched-stats"></div>
+
+      <div class="shift-title" data-i18n="shift_am">🌅 Таңертеңгі ауысым</div>
+      <div class="sched-scroll"><table class="sched-grid" id="grid-am"></table></div>
+
+      <div class="shift-title" data-i18n="shift_pm">🌇 Түстен кейінгі ауысым</div>
+      <div class="sched-scroll"><table class="sched-grid" id="grid-pm"></table></div>
+
+      <div class="shift-title" style="margin-top:26px" data-i18n="sched_add_title">➕ Сабақ қосу</div>
+      <div class="sched-add" id="add-form">
+        <label><span data-i18n="sa_day">Күн</span> <select id="sa-day"></select></label>
+        <label><span data-i18n="sa_shift">Ауысым</span>
+          <select id="sa-shift">
+            <option value="am" data-i18n="sa_shift_am">Таңертеңгі</option>
+            <option value="pm" data-i18n="sa_shift_pm">Түстен кейін</option>
+          </select>
+        </label>
+        <label><span data-i18n="sa_period">Сабақ</span> <select id="sa-period"></select></label>
+        <label><span data-i18n="sa_cls">Сынып</span> <input type="text" id="sa-cls" data-i18n-ph="sa_cls_ph" placeholder="мыс: 6Б" maxlength="6" /></label>
+        <label><span data-i18n="sa_room">Кабинет</span> <input type="text" id="sa-room" data-i18n-ph="sa_room_ph" placeholder="мыс: 204" maxlength="8" /></label>
+        <label><span></span><button class="btn btn-primary" id="sa-add" data-i18n="btn_add">Қосу</button></label>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer" style="margin-top:40px">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Білім мектебі. <span data-i18n="footer_rights">Барлық құқықтар қорғалған.</span></span>
+      <span class="muted" data-i18n="footer_cab">Мұғалім жұмысын жеңілдету — басты мақсат 🤝</span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="ui.js"></script>
+  <script src="i18n.js"></script>
+  <script src="schedule.js"></script>
+</body>
+</html>
