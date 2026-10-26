@@ -353,5 +353,11 @@ renderAddForm();
 $("#year").textContent = new Date().getFullYear();
 renderAll();
 
+/* Anchor scroll: #ach-section / #certs-section (мәзірден ашылғанда) */
+if (location.hash) {
+  const anchorEl = document.querySelector(location.hash);
+  if (anchorEl) setTimeout(() => anchorEl.scrollIntoView({ behavior: "smooth", block: "start" }), 80);
+}
+
 /* Тіл ауықса — динамикалық жолдарды қайта рендер */
 window.addEventListener("langchange", () => renderAll());
