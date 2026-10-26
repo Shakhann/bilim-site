@@ -186,7 +186,11 @@ function renderBoard() {
   card.innerHTML = `
     <div class="board-topic" style="color:var(--ink);background:var(--brand-soft);border-radius:14px;padding:14px;text-align:center;font-weight:800">🎯 ${esc(bCfg.topic)}</div>
     <div class="bgroup-head"><span class="dot" style="background:${GROUP_COLORS[group - 1]}"></span>${esc(gname)} · сенің топтағы ойларың</div>
-    ${waiting ? '<div class="board-wait">⏳ Мұғалім оқушыларды түгендеп жатыр — ойын басталғанда бірден ой қоса аласың!</div>' : ""}
+    ${waiting
+      ? '<div class="board-wait">⏳ Мұғалім оқушыларды түгендеп жатыр — ойын басталғанда бірден ой қоса аласың!</div>'
+      : branches.length
+        ? `<div class="bbranches">✍️ Ой қосатын тақырыптар: ${branches.map((b) => `<span class="bbranch-chip">${esc(b)}</span>`).join("")}</div>`
+        : ""}
     <div class="bideas" id="bideas"></div>
     <div class="bidea-form" ${waiting ? 'style="display:none"' : ""}>
       <select id="bbranch">
@@ -211,8 +215,7 @@ function renderBideas() {
         .map(
           (i) =>
             `<div class="bidea" style="border-left:3px solid ${GROUP_COLORS[group - 1]}">
-              ${esc(i.branch ? `<em style="color:var(--muted)">${esc(i.branch)}:</em> ` : "")}${esc(i.text)}
-              <div class="by">— ${esc(i.name)}</div>
+              <b>👤 ${esc(i.name)}</b>${i.branch ? ` <em style="color:var(--muted);font-weight:600;font-size:0.78rem">· ${esc(i.branch)}</em>` : ""}: ${esc(i.text)}
             </div>`
         )
         .join("")

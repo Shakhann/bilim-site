@@ -314,9 +314,10 @@ function startBoardHost(s, el) {
     Array.from(
       { length: board.groups },
       (_, i) => `
-    <div class="qr-box">
-      ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 96)}
-      <div style="margin-top:5px;font-weight:800;color:${GROUP_COLORS[i]}">${esc(gname(i + 1))}</div>
+    <div class="qr-box big">
+      ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 170)}
+      <div style="margin-top:8px;font-weight:800;color:${GROUP_COLORS[i]};font-size:1.05rem">${esc(gname(i + 1))}</div>
+      <div class="qr-players" data-g="${i + 1}"></div>
     </div>`
     ).join("") +
     `<div class="qr-box" style="align-self:center">
@@ -372,10 +373,21 @@ function startBoardHost(s, el) {
         ? `✅ Ойын басталды — ${total} оқушы қатысып жатыр`
         : `📋 Түгендеу: ${total} оқушы кірді — барлығы дайын болғанда «Ойынды бастау» басыңыз`;
     }
+    /* Әр QR астында сол топтың оқушылары */
+    $("#bqr").querySelectorAll(".qr-players").forEach((box) => {
+      const g = +box.dataset.g;
+      const names = host.players.filter((c) => c.player && c.player.g === g).map((c) => c.player.name);
+      box.innerHTML = names.length
+        ? names.map((n) => `<span class="player-chip">👤 ${esc(n)}</span>`).join("")
+        : '<span class="qr-empty">әлі кірмеді...</span>';
+    });
     renderBgroups(); /* оқушылар өз тобының астында көрсетіледі */
   }
 
   function renderBgroups() {
+    /* Ой тақтасы «Бастау» басылған соң ашылады */
+    $("#bgroups").style.display = started ? "" : "none";
+    if (!started) return;
     $("#bgroups").style.gridTemplateColumns = `repeat(${Math.min(board.groups, 3)}, 1fr)`;
     $("#bgroups").innerHTML = Array.from({ length: board.groups }, (_, gi) => {
       const g = gi + 1;
@@ -396,8 +408,7 @@ function startBoardHost(s, el) {
             .map(
               (i) => `
           <div class="idea-bubble" style="border-left:3px solid ${GROUP_COLORS[gi]}">
-            ${esc(i.branch ? `<em style="opacity:0.6">${esc(i.branch)}:</em> ` : "")}${esc(i.text)}
-            <span class="by">— ${esc(i.name)}</span>
+            <span class="idea-name">👤 ${esc(i.name)}${i.branch ? ` <em class="idea-branch">${esc(i.branch)}</em>` : ""}:</span> ${esc(i.text)}
             <button class="idea-del" data-id="${i.id}" title="Жою">✕</button>
           </div>`
             )
