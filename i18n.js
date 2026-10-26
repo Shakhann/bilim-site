@@ -61,7 +61,6 @@ const I18N = {
     certs_empty: "Әзірге сертификат жоқ. Жоғарғы пішін арқылы қосыңыз.",
     ach_empty: "Әзірге жетістік жоқ.",
     sched_title: "🗓️ Апталық расписание",
-    sched_year: "жыл",
     sched_sub:
       "Қай күні, қай уақытта, қай кабинетке. 1 сабақ — 45 минут, үзіліс — 5 минут. Тордың көзеге басу — жазбаны жою.",
     sched_lesson: "Сабақ",
@@ -410,7 +409,6 @@ const I18N = {
     certs_empty: "Пока нет сертификатов. Добавьте через форму выше.",
     ach_empty: "Пока нет достижений.",
     sched_title: "🗓️ Недельное расписание",
-    sched_year: "год",
     sched_sub:
       "В какой день, во сколько, в какой кабинет. 1 урок — 45 минут, перерыв — 5 минут. Клик по ячейке — удалить запись.",
     sched_lesson: "Урок",
@@ -754,7 +752,6 @@ const I18N = {
     certs_empty: "No certificates yet. Add one using the form above.",
     ach_empty: "No achievements yet.",
     sched_title: "🗓️ Weekly schedule",
-    sched_year: "year",
     sched_sub:
       "Which day, what time, which room. 1 lesson — 45 min, break — 5 min. Click a cell to clear it.",
     sched_lesson: "Lesson",

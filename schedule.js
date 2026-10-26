@@ -35,7 +35,7 @@ const persist = () => {
 
 /* ---------- Selekter ---------- */
 function renderYearSelect() {
-  $("#year-select").innerHTML = YEARS.map((y) => `<option value="${y}"${y === year ? " selected" : ""}>${t("year_of", y)}</option>`).join("");
+  $("#year-select").innerHTML = YEARS.map((y) => `<option value="${y}"${y === year ? " selected" : ""}>${y}</option>`).join("");
   $("#year-select").onchange = (e) => {
     year = parseInt(e.target.value);
     location.search = `?teacher=${teacherId}&year=${year}`;
@@ -49,7 +49,6 @@ function schedEntry(shift, period, day) {
 }
 
 function renderSchedule() {
-  $("#sched-year").textContent = year;
   const tc = T();
   const total = tc.schedule.length;
 

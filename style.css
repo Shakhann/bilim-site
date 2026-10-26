@@ -793,7 +793,17 @@ body > .auth-wrap {
 .hstat-link b, .hstat-link span { color: #fff; }
 .hstat-link span { color: rgba(255,255,255,0.72); }
 .hstat-link:hover { transform: translateY(-2px); background: rgba(255,255,255,0.2); }
-.pg-yearbar { margin-top: 14px; display: flex; align-items: center; gap: 10px; justify-content: center; font-weight: 600; color: var(--muted); }
+.panel-head.sched-head { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; text-align: left; }
+.year-pill {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--brand-soft); border: 1px solid rgba(79, 70, 229, 0.28);
+  border-radius: 999px; padding: 9px 12px 9px 18px;
+  font-weight: 700; font-size: 0.85rem; color: var(--brand-2); cursor: pointer;
+}
+.year-pill select {
+  border: 0; background: transparent; font-family: inherit; font-weight: 800;
+  font-size: 1.05rem; color: var(--brand); cursor: pointer; padding: 2px 0;
+}
 #add-form { scroll-margin-top: 86px; }
 
 .cab-layout {
