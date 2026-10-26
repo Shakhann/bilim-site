@@ -145,7 +145,9 @@
     $("#google-btn").addEventListener("click", async () => {
       try {
         msg("Google-мен байланысу...");
-        const u = await googleLogin($("#reg-role").value);
+        /* "Тіркелу" табы ашық болса — сол жердегі рөлі, әйтпесе сұрайды */
+        const onReg = $("#reg-form").style.display !== "none";
+        const u = await googleLogin(onReg ? $("#rg-role").value : null);
         if (u) {
           msg("✅ Сәлем, " + u.name + "!");
           setTimeout(() => afterAuthRedirect(u), 600);
