@@ -277,8 +277,8 @@ function startBoardHost(s, el) {
       <div class="board-topic">🎯 ${esc(board.topic)}</div>
       <div class="qr-row" id="bqr"></div>
       <div class="board-groups" id="bgroups"></div>
+      <div class="board-err" id="berr"></div>
       <div style="display:flex;align-items:center;gap:12px">
-        <div class="player-chips" id="bplayers"></div>
         <button class="host-btn green" id="bfinish" style="margin-left:auto;padding:10px 20px;font-size:0.9rem">✅ Аяқтау</button>
       </div>
     </div>`;
@@ -325,7 +325,7 @@ function startBoardHost(s, el) {
       }
     },
     onError(msg) {
-      $("#bplayers").innerHTML = `<span style="color:#fca5a5;font-size:0.85rem">⚠️ ${esc(msg)}</span>`;
+      $("#berr").textContent = "⚠️ " + msg;
     },
   });
   activeHost = host;
@@ -336,10 +336,7 @@ function startBoardHost(s, el) {
   }
 
   function updateBplayers() {
-    const names = host.players.filter((c) => c.player).map((c) => c.player.name);
-    $("#bplayers").innerHTML = names.length
-      ? names.map((n) => `<span class="player-chip">👤 ${esc(n)}</span>`).join("")
-      : '<span style="color:rgba(255,255,255,0.5);font-size:0.85rem">Әлі оқушы кірмеді</span>';
+    renderBgroups(); /* оқушылар өз тобының астында көрсетіледі */
   }
 
   function renderBgroups() {
@@ -347,9 +344,17 @@ function startBoardHost(s, el) {
     $("#bgroups").innerHTML = Array.from({ length: board.groups }, (_, gi) => {
       const g = gi + 1;
       const list = ideas.filter((i) => i.g === g);
+      const players = host.players.filter((c) => c.player && c.player.g === g).map((c) => c.player.name);
       return `
       <div class="board-group">
         <h4><span class="dot" style="background:${GROUP_COLORS[gi]}"></span>${esc(gname(g))} · ${list.length} ой</h4>
+        <div class="board-players${players.length ? "" : " empty"}">
+          ${
+            players.length
+              ? players.map((n) => `<span class="player-chip">👤 ${esc(n)}</span>`).join("")
+              : ""
+          }
+        </div>
         ${
           list
             .map(
