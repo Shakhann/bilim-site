@@ -310,6 +310,7 @@ function renderGames() {
       <h3>🎯 ${esc(q.title)}</h3>
       <div class="qz-meta">${q.questions.length} сұрақ · ${q.time} сек/сұрақ</div>
       <div class="lesson-actions">
+        <a class="mini-btn primary" href="present.html?quiz=${q.id}" target="_blank">▶️ Ойнату</a>
         <button class="mini-btn" data-act="edit" data-id="${q.id}">✏️ Ашу</button>
         <button class="mini-btn danger" data-act="del" data-id="${q.id}">🗑</button>
       </div>
@@ -344,6 +345,7 @@ function renderGames() {
       }</div>
       <div class="qz-meta">Тарақтары: ${esc(b.branches.join(", ") || "—")}</div>
       <div class="lesson-actions">
+        <a class="mini-btn primary" href="present.html?board=${b.id}" target="_blank">▶️ Ойнату</a>
         <button class="mini-btn" data-act="edit" data-id="${b.id}">✏️ Ашу</button>
         <button class="mini-btn danger" data-act="del" data-id="${b.id}">🗑</button>
       </div>

@@ -7,6 +7,25 @@ const quizzes = store.get("bilim.quizzes", []);
 const boards = store.get("bilim.boards", []);
 let lesson = lessons.find((l) => l.id === lessonId);
 
+/* Сабақсыз тікелей ойын: present.html?board=ID немесе ?quiz=ID */
+if (!lesson) {
+  const boardId = params.get("board");
+  const quizId = params.get("quiz");
+  if (boardId) {
+    lesson = {
+      id: "game-" + boardId,
+      title: "Топтық ойын",
+      slides: [{ id: "s1", type: "board", title: "", text: "", bg: "#ffffff", url: "", quizId: null, boardId }],
+    };
+  } else if (quizId) {
+    lesson = {
+      id: "game-" + quizId,
+      title: "Тест",
+      slides: [{ id: "s1", type: "quiz", title: "", text: "", bg: "#ffffff", url: "", quizId, boardId: null }],
+    };
+  }
+}
+
 if (!lesson) {
   document.body.innerHTML = '<div style="color:#fff;display:flex;align-items:center;justify-content:center;min-height:100vh;font-size:1.2rem">Сабақ табылмады. <a href="slides.html" style="color:#a5b4fc">Слайдтарға оралу →</a></div>';
   throw new Error("lesson not found");
