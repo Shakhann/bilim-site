@@ -105,6 +105,25 @@
       })
     );
 
+    /* Пароль ұмытылды */
+    function showReset(show) {
+      $("#reset-form").style.display = show ? "" : "none";
+      $("#login-form").style.display = show ? "none" : "";
+      if (show) $("#rs-email").focus();
+    }
+    $("#forgot-toggle").addEventListener("click", () => showReset(true));
+    $("#reset-back").addEventListener("click", () => showReset(false));
+    $("#reset-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        await resetPassword($("#rs-email").value);
+        msg("✅ Сілтеме жіберілді — почтаңызды (Spam папкам да) тексеріңіз");
+        showReset(false);
+      } catch (err) {
+        msg(err.message, false);
+      }
+    });
+
     /* Табдар */
     $$(".auth-tab").forEach((t) =>
       t.addEventListener("click", () => {
@@ -130,25 +149,6 @@
         const u = await loginUser($("#li-email").value, $("#li-pass").value);
         msg("✅ Сәлем, " + u.name + "!");
         setTimeout(() => afterAuthRedirect(u), 600);
-      } catch (err) {
-        msg(err.message, false);
-      }
-    });
-
-    /* Пароль ұмытылды ма */
-    const showReset = (on) => {
-      $("#reset-form").style.display = on ? "" : "none";
-      $("#login-form").style.display = on ? "none" : "";
-    };
-    $("#forgot-toggle").addEventListener("click", () => { showReset(true); $("#rs-email").focus(); });
-    $("#reset-back").addEventListener("click", () => showReset(false));
-    $("#reset-form").addEventListener("submit", async (e) => {
-      e.preventDefault();
-      try {
-        await resetPassword($("#rs-email").value);
-        msg("✅ Сілтеме жіберілді — почтаңызды тексеріңіз (Spam папкасын да қараңыз)");
-        $("#rs-email").value = "";
-        showReset(false);
       } catch (err) {
         msg(err.message, false);
       }
