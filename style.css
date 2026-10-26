@@ -454,7 +454,7 @@ body {
 }
 .present-top .btn-sm { padding: 7px 14px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.25); background: none; color: #fff; cursor: pointer; font-family: inherit; font-weight: 700; font-size: 0.82rem; }
 .present-main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-.present-slide { width: min(1080px, 94vw); aspect-ratio: 16/9; border-radius: 16px; display: flex; flex-direction: column; padding: 40px 48px; overflow: auto; position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
+.present-slide { width: min(1080px, 94vw); aspect-ratio: 16/9; border-radius: 16px; display: flex; flex-direction: column; padding: 20px 40px; overflow: auto; position: relative; box-shadow: 0 30px 80px rgba(0,0,0,0.5); }
 .present-slide h1 { font-size: clamp(1.6rem, 3.4vw, 2.6rem); font-weight: 800; line-height: 1.2; }
 .present-slide p { margin-top: 16px; font-size: clamp(1rem, 1.8vw, 1.35rem); opacity: 0.88; white-space: pre-line; }
 .present-slide .vid { width: 100%; flex: 1; min-height: 0; border: 0; border-radius: 10px; }
@@ -491,26 +491,26 @@ body {
 .podium-block { border-radius: 12px 12px 0 0; display: flex; align-items: center; justify-content: center; font-size: 2rem; }
 
 /* Board (топтық ойын) host */
-.board-host { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 14px; }
+.board-host { width: 100%; height: 100%; display: flex; flex-direction: column; gap: 8px; }
 .board-topic-row { display: flex; align-items: center; gap: 16px; }
 .board-topic-row .board-topic { flex: 1; }
 .board-room { text-align: right; flex-shrink: 0; }
-.board-room b { display: block; font-size: 2rem; font-weight: 800; color: #fde68a; letter-spacing: 3px; line-height: 1.1; }
+.board-room b { display: block; font-size: 2.5rem; font-weight: 800; color: #fde68a; letter-spacing: 3px; line-height: 1.1; }
 .board-room span { font-size: 0.85rem; color: rgba(255,255,255,0.6); }
-.board-topic { text-align: center; font-size: 1.5rem; font-weight: 800; background: rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; }
+.board-topic { text-align: center; font-size: 1.7rem; font-weight: 800; background: rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; }
 .board-bottom { display: flex; align-items: center; gap: 16px; }
 .board-bottom .board-status { flex: 1; }
 .board-groups { display: grid; gap: 12px; flex: 1; overflow: auto; }
 .board-group { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px 14px; }
-.board-group h4 { font-size: 1.2rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.board-group h4 { font-size: 1.35rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 .board-group .dot { width: 12px; height: 12px; border-radius: 50%; }
 /* Топ астындағы оқушылар тізімі */
 .board-players { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 12px; min-height: 36px; align-items: center; }
-.board-players .player-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); font-size: 1.15rem; padding: 6px 16px; }
+.board-players .player-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); font-size: 1.3rem; padding: 6px 16px; }
 .board-players.empty::after { content: "оқушы әлі кірмеді..."; color: rgba(255,255,255,0.35); font-size: 0.78rem; font-style: italic; }
 .board-err { min-height: 1em; color: #fca5a5; font-size: 0.85rem; }
 /* Түгендеу/бастау күйі */
-.board-status { font-size: 0.9rem; font-weight: 700; color: #fde68a; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 14px; }
+.board-status { font-size: 1.05rem; font-weight: 700; color: #fde68a; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 10px 14px; }
 .board-wait { background: #fef9c3; border: 1px solid #fde68a; color: #854d0e; font-weight: 700; font-size: 0.88rem; border-radius: 12px; padding: 12px 14px; text-align: center; }
 /* Ой қосатын тақырыптар (оқушыда, ойын басталған соң) */
 .bbranches { background: #eef2ff; border: 1px solid #c7d2fe; color: #312e81; font-size: 0.88rem; font-weight: 600; border-radius: 12px; padding: 10px 14px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -523,13 +523,13 @@ body {
 .idea-del { position: absolute; top: 4px; right: 8px; border: 0; background: none; color: #fca5a5; cursor: pointer; font-size: 0.85rem; }
 .qr-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: 16px; justify-items: center; }
 .qr-box { text-align: center; font-size: 0.9rem; background: rgba(255,255,255,0.06); border-radius: 16px; padding: 14px; width: 100%; max-width: 320px; }
-.qr-box img { width: 100%; max-width: 262px; border-radius: 10px; background: #fff; padding: 6px; }
+.qr-box img { width: 100%; max-width: 284px; border-radius: 10px; background: #fff; padding: 6px; }
 /* QR астындағы оқушылар тізімі */
-.qr-players { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; align-items: center; min-height: 40px; }
-.qr-players .player-chip { font-size: 1.25rem; padding: 6px 20px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.qr-players .qr-empty { color: rgba(255,255,255,0.4); font-size: 1rem; font-style: italic; }
+.qr-players { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; align-items: center; min-height: 34px; }
+.qr-players .player-chip { font-size: 1.5rem; padding: 6px 20px; max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.qr-players .qr-empty { color: rgba(255,255,255,0.4); font-size: 1.1rem; font-style: italic; }
 /* Жауап: алдымен аты, содан соң мәтіні */
-.idea-name { font-weight: 800; font-size: 1.15rem; color: #fff; }
+.idea-name { font-weight: 800; font-size: 1.3rem; color: #fff; }
 .idea-branch { opacity: 0.6; font-weight: 600; font-size: 0.78rem; font-style: normal; }
 
 /* ===== Оқушы join беті ===== */

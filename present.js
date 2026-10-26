@@ -321,7 +321,7 @@ function startBoardHost(s, el) {
       (_, i) => `
     <div class="qr-box">
       ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 400)}
-      <div style="margin-top:8px;font-weight:800;color:${GROUP_COLORS[i]};font-size:1.5rem">${esc(gname(i + 1))}</div>
+      <div style="margin-top:8px;font-weight:800;color:${GROUP_COLORS[i]};font-size:1.9rem">${esc(gname(i + 1))}</div>
       <div class="qr-players" data-g="${i + 1}"></div>
     </div>`
     ).join("");
