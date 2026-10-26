@@ -582,6 +582,14 @@ body {
 }
 .pass-toggle:hover { opacity: 1; background: var(--brand-soft); }
 .pass-toggle.on { opacity: 0.9; }
+/* Пароль ұмытылды */
+.forgot-row { margin-top: 12px; text-align: center; }
+.forgot-link {
+  border: 0; background: none; cursor: pointer; color: var(--brand); font-weight: 700;
+  font-size: 0.86rem; font-family: inherit; padding: 4px 8px; border-radius: 8px;
+}
+.forgot-link:hover { background: var(--brand-soft); }
+.reset-note { font-size: 0.82rem; color: var(--muted); margin-bottom: 14px; line-height: 1.5; }
 .auth-card form .btn { margin-top: 18px; }
 .auth-msg { min-height: 1.4em; margin-top: 14px; text-align: center; font-size: 0.88rem; font-weight: 700; }
 .auth-msg.ok { color: var(--green); }

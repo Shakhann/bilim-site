@@ -42,6 +42,19 @@
           </div>
         </label>
         <button type="submit" class="btn btn-primary btn-block">Кіру</button>
+        <div class="forgot-row">
+          <button type="button" class="forgot-link" id="forgot-toggle">Пароль ұмытылды ма?</button>
+        </div>
+      </form>
+
+      <!-- Пароль қалпына келтіру -->
+      <form id="reset-form" style="display:none">
+        <p class="reset-note">Email-іңізді жазыңыз — жаңа пароль орнату сілтемесін почтаңызға жібереміз</p>
+        <label><span>Эл-пошта</span><input type="email" id="rs-email" required placeholder="email@me.kz" /></label>
+        <button type="submit" class="btn btn-primary btn-block">Сілтеме жіберу</button>
+        <div class="forgot-row">
+          <button type="button" class="forgot-link" id="reset-back">← Кіруге оралу</button>
+        </div>
       </form>
 
       <!-- Тіркелу -->
@@ -117,6 +130,25 @@
         const u = await loginUser($("#li-email").value, $("#li-pass").value);
         msg("✅ Сәлем, " + u.name + "!");
         setTimeout(() => afterAuthRedirect(u), 600);
+      } catch (err) {
+        msg(err.message, false);
+      }
+    });
+
+    /* Пароль ұмытылды ма */
+    const showReset = (on) => {
+      $("#reset-form").style.display = on ? "" : "none";
+      $("#login-form").style.display = on ? "none" : "";
+    };
+    $("#forgot-toggle").addEventListener("click", () => { showReset(true); $("#rs-email").focus(); });
+    $("#reset-back").addEventListener("click", () => showReset(false));
+    $("#reset-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      try {
+        await resetPassword($("#rs-email").value);
+        msg("✅ Сілтеме жіберілді — почтаңызды тексеріңіз (Spam папкасын да қараңыз)");
+        $("#rs-email").value = "";
+        showReset(false);
       } catch (err) {
         msg(err.message, false);
       }
