@@ -121,34 +121,72 @@ $("#cert-add").addEventListener("click", async () => {
 });
 
 /* ---------- Zhetistikter ---------- */
+/* Жетістік: жай мәтін немесе {text, img} (суретті файл) */
+function normAch(a) {
+  return typeof a === "string" ? { text: a, img: null } : a;
+}
+
 function renderAch() {
   const t = T();
   const list = $("#ach-list");
   list.innerHTML = t.achievements.length
     ? t.achievements
-        .map((a, i) => `<div class="ach-item"><span>🏆 ${esc(a)}</span><button class="ach-del" data-i="${i}">✕</button></div>`)
+        .map((a, i) => {
+          const item = normAch(a);
+          const img = item.img ? `<img class="ach-thumb" src="${item.img}" alt="" />` : "";
+          return `<div class="ach-item${item.img ? " has-img" : ""}">${img}<span>🏆 ${esc(item.text || "Сурет")}</span><button class="ach-del" data-i="${i}">✕</button></div>`;
+        })
         .join("")
     : '<p class="certs-empty">Әзірге жетістік жоқ.</p>';
   list.onclick = (e) => {
     const btn = e.target.closest(".ach-del");
-    if (!btn) return;
-    T().achievements.splice(+btn.dataset.i, 1);
-    persist();
-    renderAch();
+    if (btn) {
+      T().achievements.splice(+btn.dataset.i, 1);
+      persist();
+      renderAch();
+      return;
+    }
+    /* Суретке басу — үлкейтіп көрсету */
+    const img = e.target.closest(".ach-thumb");
+    if (img) {
+      const ov = document.createElement("div");
+      ov.className = "lightbox";
+      ov.innerHTML = `<img src="${img.src}" alt="" />`;
+      ov.onclick = () => ov.remove();
+      document.body.appendChild(ov);
+    }
   };
 }
 
+let achImg = null; /* суретті уақытша сақтау */
+
 function addAch() {
   const v = $("#ach-input").value.trim();
-  if (!v) return;
-  T().achievements.unshift(v);
+  if (!v && !achImg) return toast("Жетістік жазыңыз немесе сурет таңдаңыз");
+  const t = T();
+  t.achievements.unshift({ text: v, img: achImg });
   persist();
   renderAch();
   $("#ach-input").value = "";
+  achImg = null;
+  const f = $("#ach-file");
+  if (f) f.value = "";
+  $("#ach-file-btn").textContent = "📎 Сурет таңда";
+  renderStats();
   toast("✅ Жетістік қосылды");
 }
 $("#ach-add").addEventListener("click", addAch);
 $("#ach-input").addEventListener("keydown", (e) => e.key === "Enter" && addAch());
+$("#ach-file").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    achImg = await fileToDataUrl(file);
+    $("#ach-file-btn").textContent = "✅ Сурет таңдалды";
+  } catch (err) {
+    toast("Суретті оқу мүмкін болмады");
+  }
+});
 
 /* ---------- Jyldyq synyp ---- */
 function renderYears() {
@@ -226,7 +264,7 @@ function renderSchedule() {
     PERIODS[shift].forEach((times, pi) => {
       const p = pi + 1;
       html += `<tr><td class="time">${p}</td><td class="time">${times[0]}–${times[1]}</td>`;
-      for (let d = 0; d < 5; d++) {
+      for (let d = 0; d < DAYS.length; d++) {
         const e = schedEntry(shift, p, d);
         html += e
           ? `<td class="sched-cell" data-shift="${shift}" data-period="${p}" data-day="${d}">
