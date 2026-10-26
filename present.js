@@ -315,14 +315,14 @@ function startBoardHost(s, el) {
       { length: board.groups },
       (_, i) => `
     <div class="qr-box big">
-      ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 170)}
-      <div style="margin-top:8px;font-weight:800;color:${GROUP_COLORS[i]};font-size:1.05rem">${esc(gname(i + 1))}</div>
+      ${qrImg(joinUrl("board", code, "&g=" + (i + 1)), 260)}
+      <div style="margin-top:10px;font-weight:800;color:${GROUP_COLORS[i]};font-size:1.35rem">${esc(gname(i + 1))}</div>
       <div class="qr-players" data-g="${i + 1}"></div>
     </div>`
     ).join("") +
     `<div class="qr-box" style="align-self:center">
-      <div style="font-size:1.6rem;font-weight:800;color:#fde68a;letter-spacing:2px">${code}</div>
-      <div style="margin-top:5px">Бөлме коды</div>
+      <div style="font-size:2rem;font-weight:800;color:#fde68a;letter-spacing:2px">${code}</div>
+      <div style="margin-top:8px;font-size:1rem">Бөлме коды</div>
     </div>`;
 
   let ideas = [];

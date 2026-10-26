@@ -495,11 +495,11 @@ body {
 .board-topic { text-align: center; font-size: 1.5rem; font-weight: 800; background: rgba(255,255,255,0.08); border-radius: 14px; padding: 14px; }
 .board-groups { display: grid; gap: 12px; flex: 1; overflow: auto; }
 .board-group { background: rgba(255,255,255,0.05); border-radius: 12px; padding: 12px 14px; }
-.board-group h4 { font-size: 0.9rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.board-group h4 { font-size: 1.05rem; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
 .board-group .dot { width: 12px; height: 12px; border-radius: 50%; }
 /* Топ астындағы оқушылар тізімі */
-.board-players { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; min-height: 26px; align-items: center; }
-.board-players .player-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); font-size: 0.75rem; padding: 3px 10px; }
+.board-players { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px; min-height: 30px; align-items: center; }
+.board-players .player-chip { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.22); font-size: 0.95rem; padding: 5px 14px; }
 .board-players.empty::after { content: "оқушы әлі кірмеді..."; color: rgba(255,255,255,0.35); font-size: 0.78rem; font-style: italic; }
 .board-err { min-height: 1em; color: #fca5a5; font-size: 0.85rem; }
 /* Түгендеу/бастау күйі */
@@ -514,15 +514,15 @@ body {
 }
 .idea-bubble .by { color: rgba(255,255,255,0.55); font-size: 0.72rem; }
 .idea-del { position: absolute; top: 4px; right: 8px; border: 0; background: none; color: #fca5a5; cursor: pointer; font-size: 0.85rem; }
-.qr-row { display: flex; gap: 14px; flex-wrap: wrap; justify-content: center; }
-.qr-box { text-align: center; font-size: 0.72rem; background: rgba(255,255,255,0.06); border-radius: 12px; padding: 12px; }
-.qr-box img { width: 160px; border-radius: 8px; background: #fff; padding: 4px; }
+.qr-row { display: flex; gap: 18px; flex-wrap: wrap; justify-content: center; }
+.qr-box { text-align: center; font-size: 0.8rem; background: rgba(255,255,255,0.06); border-radius: 14px; padding: 16px; }
+.qr-box img { width: 220px; border-radius: 10px; background: #fff; padding: 6px; }
 /* QR астындағы оқушылар тізімі */
-.qr-players { margin-top: 10px; display: flex; flex-direction: column; gap: 5px; align-items: center; min-height: 24px; }
-.qr-players .player-chip { font-size: 0.78rem; padding: 3px 12px; }
-.qr-players .qr-empty { color: rgba(255,255,255,0.4); font-size: 0.75rem; font-style: italic; }
+.qr-players { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; align-items: center; min-height: 32px; }
+.qr-players .player-chip { font-size: 1.05rem; padding: 6px 20px; }
+.qr-players .qr-empty { color: rgba(255,255,255,0.4); font-size: 0.95rem; font-style: italic; }
 /* Жауап: алдымен аты, содан соң мәтіні */
-.idea-name { font-weight: 800; font-size: 0.85rem; color: #fff; }
+.idea-name { font-weight: 800; font-size: 1rem; color: #fff; }
 .idea-branch { opacity: 0.6; font-weight: 600; font-size: 0.78rem; font-style: normal; }
 
 /* ===== Оқушы join беті ===== */
