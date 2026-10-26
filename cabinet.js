@@ -47,9 +47,9 @@ function renderProfile() {
 function renderStats() {
   const t = T();
   $("#stat-lessons").textContent = t.schedule.length;
-  const cls = t.years[year] || [];
-  $("#stat-classes").textContent = cls.length;
-  $("#stat-classes-year").textContent = year + " жыл: сынып саны";
+  const cls = new Set(t.schedule.map((s) => s.cls)).size;
+  $("#stat-classes").textContent = cls;
+  $("#stat-classes-year").textContent = "расписаниедегі сынып";
   $("#stat-certs").textContent = t.certs.length;
   $("#stat-ach").textContent = t.achievements.length;
 }
@@ -240,56 +240,6 @@ $("#ach-file").addEventListener("change", (e) => {
   if (file) toast("📎 Файл таңдалды: " + file.name);
 });
 
-/* ---------- Jyldyq synyp ---- */
-function renderYears() {
-  const t = T();
-  $("#years-classes").innerHTML = YEARS.map((y) => {
-    const cls = t.years[y] || [];
-    return `
-    <div class="year-block${y === year ? " current" : ""}">
-      <h3>${y} оқу жылы ${y === year ? "· қазіргі" : ""}</h3>
-      <div class="chips">
-        ${
-          cls.length
-            ? cls
-                .map(
-                  (c, i) => `<span class="chip">${esc(c)}<button data-y="${y}" data-i="${i}" title="Жою">✕</button></span>`
-                )
-                .join("")
-            : '<span class="muted" style="font-size:0.85rem">сынып жоқ</span>'
-        }
-      </div>
-      <div class="year-add">
-        <input type="text" id="yc-${y}" placeholder="сынып, мыс: 6Б" maxlength="5" />
-        <button class="mini-btn" id="ycb-${y}">+ Қосу</button>
-      </div>
-    </div>`;
-  }).join("");
-
-  $("#years-classes").onclick = (e) => {
-    const del = e.target.closest(".chip button");
-    if (del) {
-      const y = del.dataset.y;
-      T().years[y].splice(+del.dataset.i, 1);
-      persist();
-      renderYears();
-      return;
-    }
-    const add = e.target.closest("[id^='ycb-']");
-    if (add) {
-      const y = add.id.slice(4);
-      const input = $(`#yc-${y}`);
-      const v = input.value.trim();
-      if (!v) return toast("Сынып атауын жазыңыз");
-      T().years[y] = T().years[y] || [];
-      if (!T().years[y].includes(v)) T().years[y].push(v);
-      persist();
-      renderYears();
-      toast(`✅ ${y} жылға «${v}» қосылды`);
-    }
-  };
-}
-
 /* ---------- Raspi ---- */
 function schedEntry(shift, period, day) {
   return T().schedule.find((s) => s.shift === shift && s.period === period && s.day === day);
@@ -395,7 +345,6 @@ function renderAll() {
   renderStats();
   renderCerts();
   renderAch();
-  renderYears();
   renderSchedule();
 }
 
